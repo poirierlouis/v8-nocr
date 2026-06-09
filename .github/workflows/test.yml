@@ -34,8 +34,6 @@ jobs:
             -I./v8/linux/x64/include \
             -L./v8/linux/x64/lib \
             -lv8_monolith \
-            -DV8_COMPRESS_POINTERS \
-            -DV8_ENABLE_SANDBOX \
             -fno-rtti \
             -pthread -ldl
 
