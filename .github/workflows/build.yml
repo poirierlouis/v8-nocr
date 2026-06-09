@@ -1,0 +1,79 @@
+name: Build Static Library
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Free Disk Space
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          df -h
+
+      - name: Install depot_tools
+        run: |
+          git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
+          echo "$GITHUB_WORKSPACE/depot_tools" >> $GITHUB_PATH
+
+      - name: Fetch V8 Source
+        run: |
+          export PATH=$GITHUB_WORKSPACE/depot_tools:$PATH
+          fetch v8
+          cd v8
+          git checkout 5a39b146dd810a52812202fae891281d5dc4db7d
+
+      - name: Sync Dependencies
+        run: |
+          export PATH=$GITHUB_WORKSPACE/depot_tools:$PATH
+          cd v8
+          gclient sync -D
+
+      - name: Install Build Dependencies
+        run: |
+          cd v8
+          sudo ./build/install-build-deps.sh --no-prompt --no-chromeos-fonts --no-nacl --no-arm
+
+      - name: Configure GN Build Args
+        run: |
+          export PATH=$GITHUB_WORKSPACE/depot_tools:$PATH
+          cd v8
+          mkdir -p out/Release
+          cat <<EOF > out/Release/args.gn
+          is_component_build = false
+          is_debug = false
+          target_cpu = "x64"
+          use_custom_libcxx = false
+          v8_monolithic = true
+          v8_use_external_startup_data = false
+          symbol_level = 0
+          EOF
+          gn gen out/Release
+
+      - name: Build V8 Static Library
+        run: |
+          export PATH=$GITHUB_WORKSPACE/depot_tools:$PATH
+          cd v8
+          ninja -C out/Release v8_monolith
+
+      - name: Package Release
+        run: |
+          cd v8
+          mkdir -p ../pack/lib ../pack/include
+          cp -r include/* ../pack/include/
+          cp out/Release/obj/libv8_monolith.a ../pack/lib/
+          cd ../pack
+          tar -czf ../v8-14.9.207.21-linux64.tar.gz .
+
+      - name: Upload V8 Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: v8-14.9.207.21-linux64
+          path: v8-14.9.207.21-linux64.tar.gz
+          retention-days: 3

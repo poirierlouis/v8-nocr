@@ -1,0 +1,68 @@
+name: Test Static Library
+
+on:
+  workflow_run:
+    workflows: ["Build Static Library"]
+    types:
+      - completed
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Download V8 Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: v8-14.9.207.21-linux64
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract V8 Release
+        run: |
+          mkdir -p v8/linux/x64/
+          tar -xzf v8-14.9.207.21-linux64.tar.gz -C v8/linux/x64/
+
+      - name: Fetch Test Code
+        run: |
+          curl -sSL "https://chromium.googlesource.com/v8/v8/+/branch-heads/14.9/samples/hello-world.cc?format=TEXT" | base64 -d > hello_world.cpp
+
+      - name: Compile Test Code
+        run: |
+          g++ -std=c++20 hello_world.cpp -o hello_world \
+            -I./v8/linux/x64 \
+            -I./v8/linux/x64/include \
+            -L./v8/linux/x64/lib \
+            -lv8_monolith \
+            -DV8_COMPRESS_POINTERS \
+            -DV8_ENABLE_SANDBOX \
+            -fno-rtti \
+            -pthread -ldl
+
+      - name: Run and Verify Example
+        run: |
+          ./hello_world > output.txt
+          exit_code=$?
+          
+          echo "--- Program Output ---"
+          cat output.txt
+          echo "----------------------"
+          
+          if [ $exit_code -ne 0 ]; then
+            echo "Error: Execution failed with exit code $exit_code"
+            exit 1
+          fi
+          
+          cat << 'EOF' > expected.txt
+          Hello, World!
+          3 + 4 = 7
+          EOF
+          
+          if diff -q output.txt expected.txt > /dev/null; then
+            echo "Success: Output matches expected results exactly."
+          else
+            echo "Error: Output does not match expected format."
+            echo "Expected:"
+            cat expected.txt
+            exit 1
+          fi
