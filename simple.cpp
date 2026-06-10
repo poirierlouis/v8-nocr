@@ -6,8 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "include/libplatform/libplatform.h"
-#include "include/v8.h"
+#include <libplatform/libplatform.h>
+#include <v8.h>
 
 int main(int argc, char* argv[]) {
   std::unique_ptr<v8::Platform> platform = v8::platform::NewDefaultPlatform();

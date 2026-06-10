@@ -16,6 +16,9 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
       - name: Download V8 Artifact
         uses: dawidd6/action-download-artifact@v9
         with:
@@ -28,8 +31,8 @@ jobs:
 
       - name: Extract V8 Release
         run: |
-          mkdir -p v8/linux/x64/
-          tar -xzf v8-${{ env.V8_VERSION }}-linux64.tar.gz -C v8/linux/x64/
+          mkdir -p v8/
+          tar -xzf v8-${{ env.V8_VERSION }}-linux64.tar.gz -C v8/
 
       - name: Install Clang
         run: sudo apt-get install -y clang
@@ -38,9 +41,8 @@ jobs:
         run: |
           clang++ simple.cpp -o simple \
             -std=c++20 \
-            -I./v8/linux/x64 \
-            -I./v8/linux/x64/include \
-            -L./v8/linux/x64/lib \
+            -I./v8/include \
+            -L./v8/lib \
             -lv8_monolith \
             -fno-rtti \
             -fuse-ld=lld \
