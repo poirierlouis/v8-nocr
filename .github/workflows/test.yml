@@ -47,7 +47,8 @@ jobs:
             -fno-rtti \
             -fuse-ld=lld \
             -pthread \
-            -ldl
+            -ldl \
+            -DV8_COMPRESS_POINTERS
 
       - name: Run and Verify Example
         run: |
