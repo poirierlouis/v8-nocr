@@ -60,7 +60,6 @@ jobs:
           use_custom_libcxx = false
           use_sysroot = false
           use_thin_lto = false
-          allow_experimental_crel = false
           v8_enable_sandbox = false
           v8_enable_pointer_compression = false
           v8_enable_webassembly = false
