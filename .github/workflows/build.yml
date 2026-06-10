@@ -63,7 +63,6 @@ jobs:
 
       - name: Configure GN Build Args
         run: |
-          export PATH=$GITHUB_WORKSPACE/depot_tools:$PATH
           cd v8
           mkdir -p out/Release
           cat <<EOF > out/Release/args.gn
@@ -74,6 +73,8 @@ jobs:
           treat_warnings_as_errors = false
           use_custom_libcxx = false
           use_sysroot = false
+          use_thin_lto = false
+          allow_experimental_crel = false
           v8_enable_sandbox = false
           v8_enable_pointer_compression = false
           v8_enable_webassembly = false
