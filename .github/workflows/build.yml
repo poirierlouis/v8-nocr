@@ -23,7 +23,7 @@ jobs:
 
       - name: Cache Source and Tools
         id: cache-v8
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             depot_tools
@@ -98,7 +98,7 @@ jobs:
           tar -czf ../v8-${{ env.V8_VERSION }}-linux64.tar.gz .
 
       - name: Upload V8 Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: v8-release
           path: v8-${{ env.V8_VERSION }}-linux64.tar.gz
