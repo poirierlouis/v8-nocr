@@ -31,6 +31,9 @@ jobs:
           mkdir -p v8/linux/x64/
           tar -xzf v8-${{ env.V8_VERSION }}-linux64.tar.gz -C v8/linux/x64/
 
+      - name: Install Clang
+        run: sudo apt-get install -y clang
+
       - name: Fetch Test Code
         run: |
           curl -sSL "https://chromium.googlesource.com/v8/v8/+/branch-heads/14.9/samples/hello-world.cc?format=TEXT" | base64 -d > hello_world.cpp
