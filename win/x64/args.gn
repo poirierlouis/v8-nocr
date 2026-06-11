@@ -1,0 +1,32 @@
+target_cpu = \"x64\"
+
+is_debug = false
+symbol_level = 0
+strip_debug_info = true
+treat_warnings_as_errors = false
+
+is_official_build = false
+is_component_build = false
+
+is_clang = true
+use_custom_libcxx = false
+use_lld = false
+
+use_clang_modules = false
+clang_use_chrome_plugins = false
+enable_rust = false
+
+v8_monolithic = true
+v8_static_library = true
+v8_monolithic_for_shared_library = false
+
+v8_use_external_startup_data = false
+v8_enable_fuzztest = false
+v8_enable_i18n_support = false
+v8_enable_webassembly = false
+v8_enable_temporal_support = false
+v8_enable_sandbox = false
+v8_enable_pointer_compression = false
+
+clang_base_path = \"C:\llvm-clang\22.1.7\"
+clang_version = \"22\"
