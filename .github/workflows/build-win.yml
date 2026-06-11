@@ -28,7 +28,7 @@ jobs:
           curl.exe -L -o "llvm-clang.tar.xz" "https://github.com/llvm/llvm-project/releases/download/llvmorg-22.1.7/clang+llvm-22.1.7-x86_64-pc-windows-msvc.tar.xz"
           
           Write-Host "Installing LLVM 22.1.7"
-          tar -xfv llvm-clang.tar.xz -C "C:\llvm-clang"
+          tar -vxf llvm-clang.tar.xz -C "C:\llvm-clang"
           Rename-Item -Path "C:\llvm-clang\clang+llvm-22.1.7-x86_64-pc-windows-msvc" -NewName "22.1.7"
           echo "C:\llvm-clang\22.1.7\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
           
