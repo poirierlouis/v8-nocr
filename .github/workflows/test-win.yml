@@ -26,15 +26,11 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           name: v8-${{ env.V8_VERSION }}-win64
+          path: v8
           run_id: ${{ github.event.workflow_run.id || '' }}
           workflow: build-win.yml
           check_artifacts: true
           search_artifacts: true
-
-      - name: Extract Artifact
-        run: |
-          mkdir -p v8/
-          tar -xzf v8-${{ env.V8_VERSION }}-win64.zip -C v8/
 
       - name: Configure Developer Command Prompt for MSVC
         uses: ilammy/msvc-dev-cmd@v1
