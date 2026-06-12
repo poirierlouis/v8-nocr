@@ -56,14 +56,17 @@ jobs:
         shell: cmd
         run: |
           cd %GITHUB_WORKSPACE%\v8\
-          copy %GITHUB_WORKSPACE%\win\x64\args.gn out\release\args.gn
-          git apply --directory=. %GITHUB_WORKSPACE%\win\x64\patches\14.6.202.34.patch
-          git -C build apply --directory=. %GITHUB_WORKSPACE%\win\x64\patches\14.6.202.34.patch
+          git apply %GITHUB_WORKSPACE%\win\x64\patches\v8_14.6.202.34.patch
+          
+          cd build
+          git apply %GITHUB_WORKSPACE%\win\x64\patches\v8_build_14.6.202.34.patch
 
       - name: Run GN
         shell: cmd
         run: |
           cd %GITHUB_WORKSPACE%\v8\
+          mkdir out\release
+          copy %GITHUB_WORKSPACE%\win\x64\args.gn out\release\args.gn
           call gn gen out\release
 
       - name: Compile V8
