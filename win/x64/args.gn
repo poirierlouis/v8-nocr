@@ -1,4 +1,4 @@
-target_cpu=\"x64\"
+target_cpu="x64"
 
 is_debug=false
 symbol_level=0
@@ -28,5 +28,5 @@ v8_enable_temporal_support=false
 v8_enable_sandbox=true
 v8_enable_pointer_compression=true
 
-clang_base_path=\"C:\llvm-clang\22.1.7\"
-clang_version=\"22\"
+clang_base_path="C:\llvm-clang\22.1.7"
+clang_version="22"
