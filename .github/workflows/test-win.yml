@@ -40,12 +40,12 @@ jobs:
       - name: Compile examples
         shell: cmd
         run: |
-          cl.exe /std:c++20 /EHsc /O2 ^
+          cl.exe /std:c++20 /Zc:__cplusplus /EHsc /O2 ^
                  /Iv8\include ^
                  examples\hello_world.cpp ^
                  /link /LIBPATH:v8\ v8_monolith.lib ^
                  /Fe:hello_world.exe
-          cl.exe /std:c++20 /EHsc /O2 ^
+          cl.exe /std:c++20 /Zc:__cplusplus /EHsc /O2 ^
                  /Iv8\include ^
                  examples\wasm.cpp ^
                  /link /LIBPATH:v8\ v8_monolith.lib ^
