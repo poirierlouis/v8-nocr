@@ -9,14 +9,12 @@ jobs:
   build:
     runs-on: windows-latest
 
+    env:
+      DEPOT_TOOLS_WIN_TOOLCHAIN: 0
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v6
-
-      - name: Setup Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: '3.14'
 
       - name: Install LLVM/Clang v22
         shell: powershell
@@ -41,15 +39,13 @@ jobs:
       - name: Configure depot_tools
         shell: cmd
         env:
-          DEPOT_TOOLS_WIN_TOOLCHAIN: 0
+          PYTHONHTTPSVERIFY: 0
         run: |
           call gclient
           git config --global depot-tools.allowGlobalGitConfig true
 
       - name: Fetch V8
         shell: cmd
-        env:
-          DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         run: |
           call fetch v8
           cd v8
@@ -59,25 +55,21 @@ jobs:
       - name: Patch V8
         shell: cmd
         run: |
-          cd v8\
-          copy ..\win\x64\args.gn out\release\args.gn
-          git apply --directory=. ..\win\x64\patches\14.6.202.34.patch
-          git -C build apply --directory=. ..\..\win\x64\patches\14.6.202.34.patch
+          cd v8\v8\
+          copy ..\..\win\x64\args.gn out\release\args.gn
+          git apply --directory=. ..\..\win\x64\patches\14.6.202.34.patch
+          git -C build apply --directory=. ..\..\..\win\x64\patches\14.6.202.34.patch
 
       - name: Run GN
         shell: cmd
-        env:
-          DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         run: |
-          cd v8\
+          cd v8\v8\
           call gn gen out\release
 
       - name: Compile V8
         shell: cmd
-        env:
-          DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         run: |
-          cd v8\
+          cd v8\v8\
           call ninja -C out\release v8_monolith
 
       - name: Stage Artifact
@@ -86,9 +78,9 @@ jobs:
           mkdir dist\lib
           mkdir dist\include
           
-          copy v8\out\release\obj\v8_monolith.lib dist\lib\
-          xcopy v8\include\*.h dist\include /E /I /Y
-          copy v8\LICENSE* dist\
+          copy v8\v8\out\release\obj\v8_monolith.lib dist\lib\
+          xcopy v8\v8\include\*.h dist\include /E /I /Y
+          copy v8\v8\LICENSE* dist\
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v7

@@ -6,7 +6,7 @@ index 160664af5dd..4b46a2680b9 100644
  //                       function signature adapters are applied.
  
  namespace v8::base::internal {
-+	
++
 +template <typename T>
 +struct is_std_function : std::false_type {};
 +
@@ -77,7 +77,7 @@ index 4e4ab177d..28341be23 100644
 @@ -222,6 +222,8 @@ config("runtime_library") {
    cflags = []
    cflags_cc = []
- 
+
 +  ldflags = [ "/LIBPATH:" + getenv("VCINSTALLDIR") + "\\Tools\\MSVC\\" + getenv("VCToolsVersion") + "\\lib\\x64" ]
 +
    # Defines that set up the CRT.
