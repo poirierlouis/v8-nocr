@@ -1,4 +1,4 @@
-name: V8 monolithic - Windows
+name: V8 monolith - Windows
 
 on:
   push:
@@ -42,42 +42,43 @@ jobs:
         shell: cmd
         env:
           DEPOT_TOOLS_WIN_TOOLCHAIN: 0
-        run: call gclient
+        run: |
+          call gclient
+          git config --global depot-tools.allowGlobalGitConfig true
 
-      - name: Fetch V8 Source Code
+      - name: Fetch V8
         shell: cmd
         env:
           DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         run: |
-          mkdir v8
-          cd v8
           call fetch v8
           cd v8
           git checkout 14.6.202.34
           call gclient sync -D --force --reset
 
-      - name: Apply V8 Patches
+      - name: Patch V8
         shell: cmd
         run: |
-          cd v8\v8
-          copy ..\..\win\x64\args.gn out\release\args.gn
-          git apply ..\..\win\x64\patches\14.6.202.34.patch
+          cd v8\
+          copy ..\win\x64\args.gn out\release\args.gn
+          git apply --directory=. ..\win\x64\patches\14.6.202.34.patch
+          git -C build apply --directory=. ..\..\win\x64\patches\14.6.202.34.patch
 
-      - name: Run GN Gen
+      - name: Run GN
         shell: cmd
         env:
           DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         run: |
-          cd v8\v8
+          cd v8\
           call gn gen out\release
 
-      - name: Compile V8 monolithic
+      - name: Compile V8
         shell: cmd
         env:
           DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         run: |
-          cd v8\v8
-          call ninja -C out\release v8_monolithic
+          cd v8\
+          call ninja -C out\release v8_monolith
 
       - name: Stage Artifact
         shell: cmd
@@ -85,8 +86,9 @@ jobs:
           mkdir dist\lib
           mkdir dist\include
           
-          copy v8\v8\out\release\obj\v8_monolith.lib dist\lib\
-          xcopy v8\v8\include\*.h dist\include /E /I /Y
+          copy v8\out\release\obj\v8_monolith.lib dist\lib\
+          xcopy v8\include\*.h dist\include /E /I /Y
+          copy v8\LICENSE* dist\
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
