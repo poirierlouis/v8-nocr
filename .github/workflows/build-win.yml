@@ -57,9 +57,7 @@ jobs:
         run: |
           cd %GITHUB_WORKSPACE%\v8\
           git apply %GITHUB_WORKSPACE%\win\x64\patches\v8_14.6.202.34.patch
-          
-          cd build
-          git apply %GITHUB_WORKSPACE%\win\x64\patches\v8_build_14.6.202.34.patch
+          git -C build apply %GITHUB_WORKSPACE%\win\x64\patches\v8_build_14.6.202.34.patch
 
       - name: Run GN
         shell: cmd
