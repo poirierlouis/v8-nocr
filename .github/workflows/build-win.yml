@@ -9,6 +9,7 @@ jobs:
 
     env:
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
+      V8_VERSION: 14.6.202.34
 
     steps:
       - name: Checkout Repository
@@ -47,17 +48,17 @@ jobs:
         run: |
           call fetch v8
           cd v8
-          git checkout 14.6.202.34
+          git checkout ${{ env.V8_VERSION }}
           call gclient sync -D --force --reset
 
       - name: Patch V8
         shell: cmd
         run: |
           cd v8\
-          git apply --3way --ignore-whitespace ..\win\x64\patches\v8_14.6.202.34.patch
+          git apply --3way --ignore-whitespace ..\win\x64\patches\${{ env.V8_VERSION }}\v8.patch
           
           cd build
-          git apply --3way --ignore-whitespace ..\..\win\x64\patches\v8_build_14.6.202.34.patch
+          git apply --3way --ignore-whitespace ..\..\win\x64\patches\${{ env.V8_VERSION }}\v8_build.patch
 
       - name: Run GN
         shell: cmd
@@ -86,5 +87,5 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
-          name: v8-14.6.202.34-win64
+          name: v8-${{ env.V8_VERSION }}-win64
           path: dist/
