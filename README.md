@@ -25,7 +25,7 @@ number when required. This is mostly meant to support Windows. As of [September
 /DV8_COMPRESS_POINTERS
 /DV8_ENABLE_WEBASSEMBLY
 ```
-6. Build :)
+6. Build your project
 
 <!-- Links -->
 [release]: https://github.com/poirierlouis/v8-nocr/releases
@@ -41,6 +41,7 @@ as-is. It currently lacks a workflow to run tests provided in V8's repository.
 
 | Version     | Windows                                                                           |
 |-------------|-----------------------------------------------------------------------------------|
+| 14.9.207.27 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.9.207.27) \| arm64 |
 | 14.8.178.28 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.8.178.28) \| arm64 |
 | 14.7.173.22 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.7.173.22) \| arm64 |
 | 14.6.202.34 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.6.202.34) \| arm64 |
@@ -49,6 +50,7 @@ as-is. It currently lacks a workflow to run tests provided in V8's repository.
 
 |     Version | i18n | WebAssembly | Pointer Compression | Sandbox | Temporal |
 |------------:|:----:|:-----------:|:-------------------:|:-------:|:--------:|
+| 14.9.207.27 |  ✅   |      ✅      |          ✅          |    ❌    |    ❌     |
 | 14.8.178.28 |  ✅   |      ✅      |          ✅          |    ❌    |    ❌     |
 | 14.7.173.22 |  ✅   |      ✅      |          ✅          |    ❌    |    ❌     |
 | 14.6.202.34 |  ✅   |      ✅      |          ✅          |    ✅    |    ❌     |
