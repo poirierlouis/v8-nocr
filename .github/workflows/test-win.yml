@@ -15,7 +15,7 @@ jobs:
 
     env:
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
-      V8_VERSION: 14.6.202.34
+      V8_VERSION: 14.7.173.22
 
     steps:
       - name: Checkout Repository
@@ -41,7 +41,7 @@ jobs:
         shell: cmd
         run: |
           cl.exe /std:c++20 /Zc:__cplusplus /EHsc /O2 ^
-                 /DV8_COMPRESS_POINTERS /DV8_ENABLE_SANDBOX /DV8_ENABLE_WEBASSEMBLY ^
+                 /DV8_COMPRESS_POINTERS /DV8_ENABLE_WEBASSEMBLY ^
                  /Iv8\include ^
                  examples\hello_world.cpp ^
                  /link ^
@@ -49,7 +49,7 @@ jobs:
                  dbghelp.lib winmm.lib ^
                  /Fe:hello_world.exe
           cl.exe /std:c++20 /Zc:__cplusplus /EHsc /O2 ^
-                 /DV8_COMPRESS_POINTERS /DV8_ENABLE_SANDBOX /DV8_ENABLE_WEBASSEMBLY ^
+                 /DV8_COMPRESS_POINTERS /DV8_ENABLE_WEBASSEMBLY ^
                  /Iv8\include ^
                  examples\wasm.cpp ^
                  /link ^

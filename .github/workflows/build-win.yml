@@ -9,7 +9,7 @@ jobs:
 
     env:
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
-      V8_VERSION: 14.6.202.34
+      V8_VERSION: 14.7.173.22
 
     steps:
       - name: Checkout Repository
@@ -58,7 +58,7 @@ jobs:
           git apply --3way --ignore-whitespace ..\win\x64\patches\${{ env.V8_VERSION }}\v8.patch
           
           cd build
-          git apply --3way --ignore-whitespace ..\..\win\x64\patches\${{ env.V8_VERSION }}\v8_build.patch
+          git apply --3way --ignore-whitespace ..\..\win\x64\patches\${{ env.V8_VERSION }}\build\v8.patch
 
       - name: Run GN
         shell: cmd

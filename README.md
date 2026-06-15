@@ -16,42 +16,37 @@ number when required. This is mostly meant to support Windows. As of [September
 
 ## Usage
 
-1. Download an [artifact].
+1. Download a [release].
 2. Extract in the desired location (e.g. `vendors\v8\`).
 3. Include headers (e.g. `vendors\v8\include`).
 4. Link with the static library (e.g. `vendors\v8\lib\v8_monolith.lib`).
 5. Enable features:
 ```
 -DV8_COMPRESS_POINTERS
--DV8_ENABLE_SANDBOX
 -DV8_ENABLE_WEBASSEMBLY
 ```
 6. Build :)
 
 <!-- Links -->
-[artifact]: https://github.com/poirierlouis/v8-nocr/actions/runs/27419674917/artifacts/7596011761
+[release]: https://github.com/poirierlouis/v8-nocr/releases
 
 ## Guarantees
 
 There are no guarantees regarding the quality of the build. It is provided
 as-is. It currently lacks a workflow to run tests provided in V8's repository.
 
-## Platforms and Features
+## Releases and Features
 
 ### Versions
 
-|      OS | Arch |       Version |
-|--------:|-----:|--------------:|
-| Windows |  x64 | [14.6.202.34] |
-
-<!-- Links -->
-[14.6.202.34]: https://github.com/poirierlouis/v8-nocr/actions/runs/27419674917/artifacts/7596011761
+| Version     | Platform                                                                           |
+|-------------|------------------------------------------------------------------------------------|
+| 14.7.173.22 | Windows ([x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.7.173.22)) |
+| 14.6.202.34 | Windows ([x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.6.202.34)) |
 
 ### Features
 
-|      OS |   Arch | i18n | WebAssembly | Pointer Compression | Sandbox | Temporal |
-|--------:|-------:|:----:|:-----------:|:-------------------:|:-------:|:--------:|
-| Windows |    x64 |  ✅   |      ✅      |          ✅          |    ✅    |    ❌     |
-| Windows |  arm64 |  -   |      -      |          -          |    -    |          |
-|   Linux | x86_64 |  -   |      -      |          -          |    -    |          |
-|   Linux |  arm64 |  -   |      -      |          -          |    -    |          |
+|     Version | i18n | WebAssembly | Pointer Compression | Sandbox | Temporal |
+|------------:|:----:|:-----------:|:-------------------:|:-------:|:--------:|
+| 14.7.173.22 |  ✅   |      ✅      |          ✅          |    ❌    |    ❌     |
+| 14.6.202.34 |  ✅   |      ✅      |          ✅          |    ✅    |    ❌     |
