@@ -39,7 +39,7 @@ set /a TOTAL=0
 set /a PASSED=0
 set /a FAILED=0
 
-:: Run the loop. We pass the root lengths to cleanly extract relative paths.
+:: Run the loop and call the patch function
 for /r "%PATCH_ROOT%" %%F in (*.patch) do (
     call :apply_patch "%%~fF"
 )
@@ -78,26 +78,27 @@ set "THIS_PATCH=%~1"
 for %%A in ("%THIS_PATCH%") do set "THIS_PATCH_DIR=%%~dpA"
 if "%THIS_PATCH_DIR:~-1%"=="\" set "THIS_PATCH_DIR=%THIS_PATCH_DIR:~0,-1%"
 
-:: Safely calculate REL_SUBDIR using modern localized variable expansion
-setlocal EnableDelayedExpansion
-set "SUBDIR=!THIS_PATCH_DIR:%PATCH_ROOT%=!"
+:: Safely calculate REL_SUBDIR without using internal setlocal
+:: We leverage the 'call' trick to substitute the patch root out of the path safely
+call set "SUBDIR=%%THIS_PATCH_DIR:%PATCH_ROOT%=%%"
 
 :: Strip leading backslash if it exists
-if "!SUBDIR:~0,1!"=="\" set "SUBDIR=!SUBDIR:~1!"
+if "%SUBDIR:~0,1%"=="\" set "SUBDIR=%SUBDIR:~1%"
 
-if "!SUBDIR!"=="" (
+if "%SUBDIR%"=="" (
     set "FINAL_TARGET=%REPO_ROOT%"
 ) else (
-    set "FINAL_TARGET=%REPO_ROOT%\!SUBDIR!"
+    set "FINAL_TARGET=%REPO_ROOT%\%SUBDIR%"
 )
 
 echo [INFO] Applying : %~nx1
 echo        Patch    : %THIS_PATCH%
 echo        Target   : %FINAL_TARGET%
+set /a TOTAL+=1
 
 if not exist "%FINAL_TARGET%" (
     echo [ERROR] Target directory does not exist: %FINAL_TARGET%
-    endlocal & set /a FAILED+=1 & set /a TOTAL+=1
+    set /a FAILED+=1
     echo.
     goto :eof
 )
@@ -109,10 +110,10 @@ popd
 
 if %GIT_EXIT% EQU 0 (
     echo [OK]    Patch applied successfully.
-    endlocal & set /a PASSED+=1 & set /a TOTAL+=1
+    set /a PASSED+=1
 ) else (
     echo [ERROR] git apply failed ^(exit code %GIT_EXIT%^) for: %~nx1
-    endlocal & set /a FAILED+=1 & set /a TOTAL+=1
+    set /a FAILED+=1
 )
 echo.
 goto :eof
