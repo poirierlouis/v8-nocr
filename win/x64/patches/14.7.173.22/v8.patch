@@ -69,3 +69,15 @@ index 160664af5dd..e3d2bb73f66 100644
  // Provides functor traits for pre-decayed functor types.
  template <typename Functor, typename... BoundArgs>
  struct DecayedFunctorTraits;
+diff --git a/src/base/hashmap.h b/src/base/hashmap.h
+index 075bc2523e7..d693b985a55 100644
+--- a/src/base/hashmap.h
++++ b/src/base/hashmap.h
+@@ -446,6 +446,7 @@ void TemplateHashMapImpl<Key, Value, MatchFun, AllocationPolicy>::Resize() {
+ // expensive) key comparison.
+ template <typename Key, typename MatchFun>
+ struct HashEqualityThenKeyMatcher {
++  HashEqualityThenKeyMatcher() : match_(nullptr) {}
+   explicit HashEqualityThenKeyMatcher(MatchFun match) : match_(match) {}
+ 
+   bool operator()(uint32_t hash1, uint32_t hash2, const Key& key1,
