@@ -22,8 +22,8 @@ number when required. This is mostly meant to support Windows. As of [September
 4. Link with the static library (e.g. `vendors\v8\lib\v8_monolith.lib`).
 5. Enable features:
 ```
--DV8_COMPRESS_POINTERS
--DV8_ENABLE_WEBASSEMBLY
+/DV8_COMPRESS_POINTERS
+/DV8_ENABLE_WEBASSEMBLY
 ```
 6. Build :)
 
@@ -39,14 +39,16 @@ as-is. It currently lacks a workflow to run tests provided in V8's repository.
 
 ### Versions
 
-| Version     | Platform                                                                           |
-|-------------|------------------------------------------------------------------------------------|
-| 14.7.173.22 | Windows ([x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.7.173.22)) |
-| 14.6.202.34 | Windows ([x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.6.202.34)) |
+| Version     | Windows                                                                           |
+|-------------|-----------------------------------------------------------------------------------|
+| 14.8.178.28 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.8.178.28) \| arm64 |
+| 14.7.173.22 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.7.173.22) \| arm64 |
+| 14.6.202.34 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.6.202.34) \| arm64 |
 
 ### Features
 
 |     Version | i18n | WebAssembly | Pointer Compression | Sandbox | Temporal |
 |------------:|:----:|:-----------:|:-------------------:|:-------:|:--------:|
+| 14.8.178.28 |  ✅   |      ✅      |          ✅          |    ❌    |    ❌     |
 | 14.7.173.22 |  ✅   |      ✅      |          ✅          |    ❌    |    ❌     |
 | 14.6.202.34 |  ✅   |      ✅      |          ✅          |    ✅    |    ❌     |

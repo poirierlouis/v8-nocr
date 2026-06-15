@@ -9,7 +9,7 @@ jobs:
 
     env:
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
-      V8_VERSION: 14.7.173.22
+      V8_VERSION: 14.8.178.28
 
     steps:
       - name: Checkout Repository
