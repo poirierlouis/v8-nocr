@@ -55,7 +55,10 @@ jobs:
         shell: cmd
         run: |
           cd v8\
-          ..\win\patch.cmd ..\win\x64\patches\${{ env.V8_VERSION }} .
+          git apply --3way --ignore-whitespace ..\win\x64\patches\${{ env.V8_VERSION }}\v8.patch
+          
+          cd build
+          git apply --3way --ignore-whitespace ..\..\win\x64\patches\${{ env.V8_VERSION }}\build\v8.patch
 
       - name: Run GN
         shell: cmd
