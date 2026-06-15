@@ -3,19 +3,8 @@ setlocal EnableExtensions DisableDelayedExpansion
 
 :: ============================================================
 ::  patch.cmd
-::  Autodiscovers and applies .patch files while preserving
+::  Auto-discovers and applies .patch files while preserving
 ::  the folder hierarchy relative to a configurable root.
-::
-::  Usage (run from your repo subdirectory, e.g. v8\):
-::    patch.cmd <PATCH_ROOT> <REPO_ROOT>
-::
-::  Folder mapping convention:
-::    A patch at  <PATCH_ROOT>\foo\bar\my.patch
-::    is applied inside <REPO_ROOT>\foo\bar\
-::
-::  Example:
-::    cd v8\
-::    ..\win\patch.cmd "..\win\x64\patches\14.6.202.34" "."
 :: ============================================================
 
 set "PATCH_ROOT=%~f1"
@@ -23,6 +12,10 @@ set "REPO_ROOT=%~f2"
 
 if "%PATCH_ROOT%"=="" set "PATCH_ROOT=%CD%\patches"
 if "%REPO_ROOT%"=="" set "REPO_ROOT=%CD%"
+
+:: Strip trailing slashes from roots to ensure predictable string manipulation
+if "%PATCH_ROOT:~-1%"=="\" set "PATCH_ROOT=%PATCH_ROOT:~0,-1%"
+if "%REPO_ROOT:~-1%"=="\" set "REPO_ROOT=%REPO_ROOT:~0,-1%"
 
 if not exist "%PATCH_ROOT%" (
     echo [ERROR] Patch root not found: %PATCH_ROOT%
@@ -46,8 +39,9 @@ set /a TOTAL=0
 set /a PASSED=0
 set /a FAILED=0
 
+:: Run the loop. We pass the root lengths to cleanly extract relative paths.
 for /r "%PATCH_ROOT%" %%F in (*.patch) do (
-    call :apply_patch "%%~fF" "%%~dpF"
+    call :apply_patch "%%~fF"
 )
 
 echo ============================================================
@@ -68,60 +62,57 @@ if %TOTAL% EQU 0 (
     echo [WARN] No .patch files found under: %PATCH_ROOT%
     exit /b 0
 )
+
 echo.
 echo [OK] All patches applied successfully.
 exit /b 0
 
-
 :: ============================================================
+::  SUBROUTINES
+:: ============================================================
+
 :apply_patch
-::   %1 = full path to .patch file
-::   %2 = directory containing the .patch file (with trailing \)
-:: ============================================================
-set /a TOTAL+=1
+set "THIS_PATCH=%~1"
 
-set "THIS_PATCH=%~f1"
-set "THIS_PATCH_DIR=%~2"
-
-:: Strip trailing backslash
+:: Get the directory containing the patch file
+for %%A in ("%THIS_PATCH%") do set "THIS_PATCH_DIR=%%~dpA"
 if "%THIS_PATCH_DIR:~-1%"=="\" set "THIS_PATCH_DIR=%THIS_PATCH_DIR:~0,-1%"
 
-:: Remove the PATCH_ROOT prefix to get the relative subdirectory.
-:: We use a call trick to do string substitution without delayed expansion.
-call set "REL_SUBDIR=%%THIS_PATCH_DIR:%PATCH_ROOT%=%%"
+:: Safely calculate REL_SUBDIR using modern localized variable expansion
+setlocal EnableDelayedExpansion
+set "SUBDIR=!THIS_PATCH_DIR:%PATCH_ROOT%=!"
 
-:: Strip leading backslash if present
-if "%REL_SUBDIR:~0,1%"=="\" set "REL_SUBDIR=%REL_SUBDIR:~1%"
+:: Strip leading backslash if it exists
+if "!SUBDIR:~0,1!"=="\" set "SUBDIR=!SUBDIR:~1!"
 
-:: Build target directory
-if "%REL_SUBDIR%"=="" (
-    set "TARGET_DIR=%REPO_ROOT%"
+if "!SUBDIR!"=="" (
+    set "FINAL_TARGET=%REPO_ROOT%"
 ) else (
-    set "TARGET_DIR=%REPO_ROOT%\%REL_SUBDIR%"
+    set "FINAL_TARGET=%REPO_ROOT%\!SUBDIR!"
 )
 
 echo [INFO] Applying : %~nx1
 echo        Patch    : %THIS_PATCH%
-echo        Target   : %TARGET_DIR%
+echo        Target   : %FINAL_TARGET%
 
-if not exist "%TARGET_DIR%" (
-    echo [ERROR] Target directory does not exist: %TARGET_DIR%
-    set /a FAILED+=1
+if not exist "%FINAL_TARGET%" (
+    echo [ERROR] Target directory does not exist: %FINAL_TARGET%
+    endlocal & set /a FAILED+=1 & set /a TOTAL+=1
     echo.
     goto :eof
 )
 
-pushd "%TARGET_DIR%"
+pushd "%FINAL_TARGET%"
 git apply --3way --ignore-whitespace "%THIS_PATCH%"
 set "GIT_EXIT=%ERRORLEVEL%"
 popd
 
 if %GIT_EXIT% EQU 0 (
     echo [OK]    Patch applied successfully.
-    set /a PASSED+=1
+    endlocal & set /a PASSED+=1 & set /a TOTAL+=1
 ) else (
     echo [ERROR] git apply failed ^(exit code %GIT_EXIT%^) for: %~nx1
-    set /a FAILED+=1
+    endlocal & set /a FAILED+=1 & set /a TOTAL+=1
 )
 echo.
 goto :eof
