@@ -48,6 +48,16 @@ jobs:
                  /LIBPATH:v8\lib\ v8_monolith.lib ^
                  dbghelp.lib winmm.lib ^
                  /Fe:hello_world.exe
+          
+          cl.exe /std:c++20 /Zc:__cplusplus /EHsc /O2 ^
+                 /DV8_COMPRESS_POINTERS /DV8_ENABLE_SANDBOX /DV8_ENABLE_WEBASSEMBLY ^
+                 /Iv8\include ^
+                 examples\intl.cpp ^
+                 /link ^
+                 /LIBPATH:v8\lib\ v8_monolith.lib ^
+                 dbghelp.lib winmm.lib ^
+                 /Fe:intl.exe
+          
           cl.exe /std:c++20 /Zc:__cplusplus /EHsc /O2 ^
                  /DV8_COMPRESS_POINTERS /DV8_ENABLE_WEBASSEMBLY ^
                  /Iv8\include ^
@@ -62,6 +72,10 @@ jobs:
         run: |
           hello_world.exe > output.txt || (echo Program crashed with exit code %errorlevel% && exit /b 1)
           (echo Hello, World!) > test.txt
+          fc.exe test.txt output.txt
+          
+          intl.exe > output.txt || (echo Program crashed with exit code %errorlevel% && exit /b 1)
+          (echo vendredi 6 février 2026) > test.txt
           fc.exe test.txt output.txt
           
           wasm.exe > output.txt || (echo Program crashed with exit code %errorlevel% && exit /b 1)
