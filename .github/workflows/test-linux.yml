@@ -1,0 +1,87 @@
+name: Test - Linux
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Build - Linux"]
+    types:
+      - completed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+
+    env:
+      V8_VERSION: 14.9.207.27
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v6
+
+      - name: Download Artifact
+        uses: dawidd6/action-download-artifact@v9
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          name: v8-${{ env.V8_VERSION }}-linux64
+          path: v8
+          run_id: ${{ github.event.workflow_run.id || '' }}
+          workflow: build-linux.yml
+          check_artifacts: true
+          search_artifacts: true
+
+      - name: Install LLVM/Clang v23
+        run: |
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh 23
+
+      - name: Compile examples
+        run: |
+          /usr/lib/llvm-23/bin/clang++ -std=c++20 \
+                                       -fuse-ld=lld \
+                                       -O3 \
+                                       -DV8_COMPRESS_POINTERS \
+                                       -DV8_ENABLE_WEBASSEMBLY \
+                                       -I./v8/include \
+                                       examples/hello_world.cpp \
+                                       -L./v8/lib -lv8_monolith \
+                                       -lrt -ldl -pthread -latomic \
+                                       -o hello_world
+          
+          /usr/lib/llvm-23/bin/clang++ -std=c++20 \
+                                       -fuse-ld=lld \
+                                       -O3 \
+                                       -DV8_COMPRESS_POINTERS \
+                                       -DV8_ENABLE_WEBASSEMBLY \
+                                       -I./v8/include \
+                                       examples/intl.cpp \
+                                       -L./v8/lib -lv8_monolith \
+                                       -lrt -ldl -pthread -latomic \
+                                       -o intl
+          
+          /usr/lib/llvm-23/bin/clang++ -std=c++20 \
+                                       -fuse-ld=lld \
+                                       -O3 \
+                                       -DV8_COMPRESS_POINTERS \
+                                       -DV8_ENABLE_WEBASSEMBLY \
+                                       -I./v8/include \
+                                       examples/wasm.cpp \
+                                       -L./v8/lib -lv8_monolith \
+                                       -lrt -ldl -pthread -latomic \
+                                       -o wasm
+
+      - name: Check examples
+        run: |
+          hello_world > output.txt || (echo Program crashed with exit code $? && exit 1)
+          (echo Hello, World!) > test.txt
+          fc.exe test.txt output.txt
+          
+          intl > output.txt || (echo Program crashed with exit code $? && exit 1)
+          (echo vendredi 6 février 2026) > test.txt
+          fc.exe test.txt output.txt
+          
+          wasm > output.txt || (echo Program crashed with exit code $? && exit 1)
+          (echo 3 + 4 = 7) > test.txt
+          fc.exe test.txt output.txt

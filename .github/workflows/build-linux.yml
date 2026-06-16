@@ -1,0 +1,77 @@
+name: Build - Linux
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      PATH: /usr/lib/llvm-23:${{ env.PATH }}
+      V8_VERSION: 14.9.207.27
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v6
+
+      - name: Install LLVM/Clang v23
+        run: |
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh 23
+
+      - name: Setup LLVM/Clang v23
+        run: |
+          sudo ln -s /usr/lib/llvm-23/lib/clang/23/lib/linux \
+                     /usr/lib/llvm-23/lib/clang/23/lib/x86_64-unknown-linux-gnu
+          sudo ln -s /usr/lib/llvm-23/lib/clang/23/lib/linux/libclang_rt.builtins-x86_64.a \
+                     /usr/lib/llvm-23/lib/clang/23/lib/linux/libclang_rt.builtins.a
+
+      - name: Install depot_tools
+        run: |
+          git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
+
+      - name: Configure depot_tools
+        run: |
+          gclient
+          git config --global depot-tools.allowGlobalGitConfig true
+
+      - name: Fetch V8
+        run: |
+          fetch v8
+          cd v8
+          git checkout ${{ env.V8_VERSION }}
+          gclient sync -D
+
+      - name: Patch V8
+        run: |
+          cd v8\
+          git apply --3way --ignore-whitespace ..\linux\x64\patches\${{ env.V8_VERSION }}\v8.patch
+
+      - name: Run GN
+        run: |
+          cd v8
+          mkdir -p out/release
+          cp ../linux/x64/args.gn out/release/args.gn
+          gn gen out/release
+
+      - name: Compile V8
+        run: |
+          cd v8
+          ninja -C out/release v8_monolith
+
+      - name: Stage Artifact
+        run: |
+          mkdir dist/lib
+          mkdir dist/include
+          
+          cp v8/out/release/obj/libv8_monolith.a dist/lib/
+          rsync -avm --include='*/' --include='*.h' --exclude='*' v8/include/ dist/include/
+          cp v8/LICENSE* dist/
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: v8-${{ env.V8_VERSION }}-linux64
+          path: dist/
