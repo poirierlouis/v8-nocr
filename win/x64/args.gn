@@ -20,6 +20,7 @@ v8_monolithic=true
 v8_static_library=true
 v8_monolithic_for_shared_library=false
 
+icu_use_data_file=false
 v8_use_external_startup_data=false
 v8_enable_fuzztest=false
 v8_enable_i18n_support=true
