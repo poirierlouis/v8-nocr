@@ -1,3 +1,16 @@
+diff --git a/BUILD.gn b/BUILD.gn
+index dd22a8954e1..52135d2fb41 100644
+--- a/BUILD.gn
++++ b/BUILD.gn
+@@ -1818,7 +1818,7 @@ config("toolchain") {
+       # Google3 enables this warning, so we should also enable it to find issue
+       # earlier. See https://reviews.llvm.org/D56731 for details about this
+       # warning.
+-      cflags += [ "-Wctad-maybe-unsupported" ]
++      # cflags += [ "-Wctad-maybe-unsupported" ]
+     }
+ 
+     if (is_clang && use_cppgc_clang_plugin && clang_use_chrome_plugins) {
 diff --git a/gni/v8.gni b/gni/v8.gni
 index f58611beac9..b43f30714ce 100644
 --- a/gni/v8.gni

@@ -72,8 +72,8 @@ jobs:
 
       - name: Stage Artifact
         run: |
-          mkdir dist/lib
-          mkdir dist/include
+          mkdir -p dist/lib
+          mkdir -p dist/include
           
           cp v8/out/release/obj/libv8_monolith.a dist/lib/
           rsync -avm --include='*/' --include='*.h' --exclude='*' v8/include/ dist/include/
