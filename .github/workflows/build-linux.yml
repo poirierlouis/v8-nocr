@@ -50,7 +50,7 @@ jobs:
       - name: Patch V8
         run: |
           cd v8
-          git apply --3way --ignore-whitespace ..\linux\x64\patches\${{ env.V8_VERSION }}\v8.patch
+          git apply --3way --ignore-whitespace ../linux/x64/patches/${{ env.V8_VERSION }}/v8.patch
 
       - name: Run GN
         run: |
