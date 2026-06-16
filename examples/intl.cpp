@@ -23,9 +23,9 @@ int main(int argc, char* argv[]) {
     v8::Local<v8::Context> context = v8::Context::New(isolate);
     v8::Context::Scope context_scope(context);
     {
-      constexpr auto csource = "const date = new Date(2026, 1, 6, 13, 37);\n"
-        "new Intl.DateTimeFormat('fr-FR', {dateStyle: 'full'}).format(date);";
-      v8::Local<v8::String> source = v8::String::NewFromUtf8Literal(isolate, csource);
+      v8::Local<v8::String> source = v8::String::NewFromUtf8Literal(isolate,
+        "const date = new Date(2026, 1, 6, 13, 37);\n"
+        "new Intl.DateTimeFormat('fr-FR', {dateStyle: 'full'}).format(date);");
       v8::Local<v8::Script> script = v8::Script::Compile(context, source).ToLocalChecked();
       v8::Local<v8::Value> result = script->Run(context).ToLocalChecked();
       v8::String::Utf8Value utf8(isolate, result);
