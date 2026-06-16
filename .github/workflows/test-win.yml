@@ -1,9 +1,9 @@
-name: Test V8 monolith - Windows
+name: Test - Windows
 
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: ["Build V8 monolith - Windows"]
+    workflows: ["Build - Windows"]
     types:
       - completed
 

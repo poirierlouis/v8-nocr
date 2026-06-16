@@ -1,4 +1,4 @@
-name: Build V8 monolith - Windows
+name: Build - Windows
 
 on:
   workflow_dispatch:
