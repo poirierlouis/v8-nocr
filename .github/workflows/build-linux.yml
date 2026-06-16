@@ -8,7 +8,6 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      PATH: /usr/lib/llvm-23:${{ env.PATH }}
       V8_VERSION: 14.9.207.27
 
     steps:
@@ -23,6 +22,8 @@ jobs:
 
       - name: Setup LLVM/Clang v23
         run: |
+          echo "/usr/lib/llvm-23" >> $GITHUB_PATH
+          
           sudo ln -s /usr/lib/llvm-23/lib/clang/23/lib/linux \
                      /usr/lib/llvm-23/lib/clang/23/lib/x86_64-unknown-linux-gnu
           sudo ln -s /usr/lib/llvm-23/lib/clang/23/lib/linux/libclang_rt.builtins-x86_64.a \
