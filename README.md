@@ -48,9 +48,15 @@ as-is. It currently lacks a workflow to run tests provided in V8's repository.
 
 ### Features
 
-|     Version | i18n | WebAssembly | Pointer Compression | Sandbox | Temporal |
-|------------:|:----:|:-----------:|:-------------------:|:-------:|:--------:|
-| 14.9.207.27 |  ✅   |      ✅      |          ✅          |    ❌    |    ❌     |
-| 14.8.178.28 |  ✅   |      ✅      |          ✅          |    ❌    |    ❌     |
-| 14.7.173.22 |  ✅   |      ✅      |          ✅          |    ❌    |    ❌     |
-| 14.6.202.34 |  ✅   |      ✅      |          ✅          |    ✅    |    ❌     |
+|     Version | i18n[^1] | WebAssembly[^2] | Pointer Compression[^3] | Sandbox[^4] | Temporal[^5] |
+|------------:|:--------:|:---------------:|:-----------------------:|:-----------:|:------------:|
+| 14.9.207.27 |    ✅     |        ✅        |            ✅            |      ❌      |      ❌       |
+| 14.8.178.28 |    ✅     |        ✅        |            ✅            |      ❌      |      ❌       |
+| 14.7.173.22 |    ✅     |        ✅        |            ✅            |      ❌      |      ❌       |
+| 14.6.202.34 |    ✅     |        ✅        |            ✅            |      ✅      |      ❌       |
+
+[^1]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl
+[^2]: https://developer.mozilla.org/en-US/docs/WebAssembly
+[^3]: https://v8.dev/blog/pointer-compression
+[^4]: https://v8.dev/blog/sandbox
+[^5]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal
