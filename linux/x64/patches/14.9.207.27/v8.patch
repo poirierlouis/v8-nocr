@@ -1,5 +1,5 @@
 diff --git a/BUILD.gn b/BUILD.gn
-index dd22a8954e1..52135d2fb41 100644
+index dd22a8954e1..8691405ebee 100644
 --- a/BUILD.gn
 +++ b/BUILD.gn
 @@ -1818,7 +1818,7 @@ config("toolchain") {
@@ -7,7 +7,7 @@ index dd22a8954e1..52135d2fb41 100644
        # earlier. See https://reviews.llvm.org/D56731 for details about this
        # warning.
 -      cflags += [ "-Wctad-maybe-unsupported" ]
-+      # cflags += [ "-Wctad-maybe-unsupported" ]
++      cflags += [ "-Wno-deprecated-declarations" ]
      }
  
      if (is_clang && use_cppgc_clang_plugin && clang_use_chrome_plugins) {
