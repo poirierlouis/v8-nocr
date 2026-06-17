@@ -39,12 +39,12 @@ as-is. It currently lacks a workflow to run tests provided in V8's repository.
 
 ### Versions
 
-| Version     | Windows                                                                           |
-|-------------|-----------------------------------------------------------------------------------|
-| 14.9.207.27 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.9.207.27) \| arm64 |
-| 14.8.178.28 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.8.178.28) \| arm64 |
-| 14.7.173.22 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.7.173.22) \| arm64 |
-| 14.6.202.34 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.6.202.34) \| arm64 |
+| Version     |                                 Windows                                  |                                  Linux                                   |
+|-------------|:------------------------------------------------------------------------:|:------------------------------------------------------------------------:|
+| 14.9.207.27 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.9.207.27) | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.9.207.27) |
+| 14.8.178.28 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.8.178.28) |                                    -                                     |
+| 14.7.173.22 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.7.173.22) |                                    -                                     |
+| 14.6.202.34 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.6.202.34) |                                    -                                     |
 
 ### Features
 
