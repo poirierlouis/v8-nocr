@@ -74,14 +74,14 @@ jobs:
 
       - name: Check examples
         run: |
-          hello_world > output.txt || (echo Program crashed with exit code $? && exit 1)
-          (echo Hello, World!) > test.txt
-          fc.exe test.txt output.txt
+          ./hello_world > output.txt || (echo Program crashed with exit code $? && exit 1)
+          echo "Hello, World!" > test.txt
+          diff test.txt output.txt
           
-          intl > output.txt || (echo Program crashed with exit code $? && exit 1)
-          (echo vendredi 6 février 2026) > test.txt
-          fc.exe test.txt output.txt
+          ./intl > output.txt || (echo Program crashed with exit code $? && exit 1)
+          echo "vendredi 6 février 2026" > test.txt
+          diff test.txt output.txt
           
-          wasm > output.txt || (echo Program crashed with exit code $? && exit 1)
-          (echo 3 + 4 = 7) > test.txt
-          fc.exe test.txt output.txt
+          ./wasm > output.txt || (echo Program crashed with exit code $? && exit 1)
+          echo "3 + 4 = 7" > test.txt
+          diff test.txt output.txt
