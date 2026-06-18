@@ -1,0 +1,129 @@
+diff --git a/src/base/functional/bind-internal.h b/src/base/functional/bind-internal.h
+index 160664af5dd..e3d2bb73f66 100644
+--- a/src/base/functional/bind-internal.h
++++ b/src/base/functional/bind-internal.h
+@@ -29,12 +29,23 @@
+ 
+ namespace v8::base::internal {
+ 
++template <typename T>
++struct is_std_function : std::false_type {};
++
++template <typename Signature>
++struct is_std_function<std::function<Signature>> : std::true_type {};
++
++template <typename T>
++inline constexpr bool is_std_function_v = is_std_function<std::remove_cvref_t<T>>::value;
++
+ // True if `T` is completely defined.
+ template <typename T>
+ concept IsComplete = requires { sizeof(T); } ||
+                      // Function types must be included explicitly since you
+                      // cannot apply `sizeof()` to a function type.
+-                     std::is_function_v<std::remove_cvref_t<T>>;
++                     std::is_function_v<std::remove_cvref_t<T>> ||
++                     // PATCH: MSVC STL compatibility fallback for std::function instances
++                     is_std_function_v<T>;
+ 
+ // Packs a list of types to hold them in a single type.
+ template <typename... Types>
+@@ -86,6 +97,14 @@ concept HasOverloadedCallOp = requires {
+ template <typename Signature>
+ struct ExtractArgsImpl;
+ 
++// PATCH: Missing specialization to extract arguments from std::function
++template <typename R, typename... Args>
++struct ExtractArgsImpl<std::function<R(Args...)>> {
++  using ReturnType = R;
++  template <size_t i>
++  using Arg = typename std::tuple_element<i, std::tuple<Args...>>::type;
++};
++
+ template <typename R, typename... Args>
+ struct ExtractArgsImpl<R(Args...)> {
+   using ReturnType = R;
+@@ -120,6 +139,12 @@ BIND_INTERNAL_EXTRACT_CALLABLE_RUN_TYPE_WITH_QUALS(const noexcept);
+ 
+ #undef BIND_INTERNAL_EXTRACT_CALLABLE_RUN_TYPE_WITH_QUALS
+ 
++// PATCH: Missing specialization to extract signatures from std::function
++template <typename R, typename... Args>
++struct ExtractCallableRunTypeImpl<std::function<R(Args...)>> {
++  using Type = R(Args...);
++};
++
+ // Evaluated to the RunType of the given callable type; e.g.
+ // `ExtractCallableRunType<decltype([](int, char*) { return 0.1; })>` ->
+ //     `double(int, char*)`.
+@@ -134,6 +159,13 @@ using ExtractCallableRunType =
+ template <typename Functor, typename... BoundArgs>
+ struct FunctorTraits;
+ 
++// PATCH: Missing specialization for FunctorTraits to recognize std::function
++template <typename R, typename... Args>
++struct FunctorTraits<std::function<R(Args...)>> {
++  using RunType = R(Args...);
++  static constexpr size_t kNumArgs = sizeof...(Args);
++};
++
+ // Provides functor traits for pre-decayed functor types.
+ template <typename Functor, typename... BoundArgs>
+ struct DecayedFunctorTraits;
+diff --git a/src/base/hashmap.h b/src/base/hashmap.h
+index 075bc2523e7..d693b985a55 100644
+--- a/src/base/hashmap.h
++++ b/src/base/hashmap.h
+@@ -446,6 +446,7 @@ void TemplateHashMapImpl<Key, Value, MatchFun, AllocationPolicy>::Resize() {
+ // expensive) key comparison.
+ template <typename Key, typename MatchFun>
+ struct HashEqualityThenKeyMatcher {
++  HashEqualityThenKeyMatcher() : match_(nullptr) {}
+   explicit HashEqualityThenKeyMatcher(MatchFun match) : match_(match) {}
+ 
+   bool operator()(uint32_t hash1, uint32_t hash2, const Key& key1,
+diff --git a/src/objects/map.h b/src/objects/map.h
+index 3dbf7f06d1f..2866e43b32c 100644
+--- a/src/objects/map.h
++++ b/src/objects/map.h
+@@ -1337,6 +1337,7 @@ V8_ABSTRACT_OBJECT class ExtendedMap : public Map {
+ 
+   std::atomic<uint8_t> bit_field_ex_;
+   // Leaves kTaggedSize-1 unused bytes, they will be used by subclasses.
++  uint8_t patch_msvc_padding_[3];
+ } V8_OBJECT_END;
+ 
+ constexpr int ExtendedMapSizeForKind(ExtendedMapKind kind);
+diff --git a/src/objects/map.tq b/src/objects/map.tq
+index 59e4ec5a045..aa321df736f 100644
+--- a/src/objects/map.tq
++++ b/src/objects/map.tq
+@@ -114,6 +114,7 @@ bitfield struct ExtendedMapBitFields extends uint8 {
+ extern class ExtendedMap extends Map {
+   bit_field_ex: ExtendedMapBitFields;
+   // Leaves kTaggedSize-1 unused bytes, they will be used by subclasses.
++  patch_msvc_padding[3]: uint8;
+ }
+ 
+ // Extended map for interceptor objects, it caches named and indexed
+@@ -122,7 +123,7 @@ extern class ExtendedMap extends Map {
+ @hasSameInstanceTypeAsParent
+ @doNotGenerateCast
+ extern class JSInterceptorMap extends ExtendedMap {
+-  @ifnot(TAGGED_SIZE_8_BYTES) extended_padding[3]: uint8;
++  @ifnot(TAGGED_SIZE_8_BYTES) extended_padding[4]: uint8;
+   @if(TAGGED_SIZE_8_BYTES) extended_padding[7]: uint8;
+   named_interceptor: InterceptorInfo;
+   indexed_interceptor: InterceptorInfo;
+diff --git a/src/runtime/runtime-test.cc b/src/runtime/runtime-test.cc
+index 478a697dd7e..6979ba62427 100644
+--- a/src/runtime/runtime-test.cc
++++ b/src/runtime/runtime-test.cc
+@@ -1194,7 +1194,7 @@ RUNTIME_FUNCTION(Runtime_SetAllocationTimeout) {
+   CONVERT_INT32_ARG_FUZZ_SAFE(timeout, 1);
+   isolate->heap()->set_allocation_timeout(timeout);
+ #else   // !V8_ENABLE_ALLOCATION_TIMEOUT
+-  static std::atomic_flag printed_warning{false};
++  static std::atomic_flag printed_warning;
+   if (!printed_warning.test_and_set()) {
+     base::OS::PrintError(
+         "Warning: %%SetAllocationTimeout has no effect in this build. Set the "
