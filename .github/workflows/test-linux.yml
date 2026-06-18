@@ -6,6 +6,7 @@ on:
     workflows: ["Build - Linux"]
     types:
       - completed
+  pull_request:
 
 jobs:
   build:
@@ -14,7 +15,7 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
 
     env:
-      V8_VERSION: 14.9.207.27
+      V8_VERSION: 14.9.207.29
 
     steps:
       - name: Checkout Repository

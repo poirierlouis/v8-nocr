@@ -35,22 +35,20 @@ number when required. This is mostly meant to support Windows. As of [September
 There are no guarantees regarding the quality of the build. It is provided
 as-is. It currently lacks a workflow to run tests provided in V8's repository.
 
-## Releases and Features
-
-### Versions
+## Releases
 
 | Version     |                                 Windows                                  |                                  Linux                                   |
 |-------------|:------------------------------------------------------------------------:|:------------------------------------------------------------------------:|
-| 14.9.207.27 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.9.207.27) | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.9.207.27) |
+| 14.9.207.29 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.9.207.29) | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.9.207.29) |
 | 14.8.178.28 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.8.178.28) |                                    -                                     |
 | 14.7.173.22 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.7.173.22) |                                    -                                     |
 | 14.6.202.34 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.6.202.34) |                                    -                                     |
 
-### Features
+## Features
 
 |     Version | i18n[^1] | WebAssembly[^2] | Pointer Compression[^3] | Sandbox[^4] | Temporal[^5] |
 |------------:|:--------:|:---------------:|:-----------------------:|:-----------:|:------------:|
-| 14.9.207.27 |    ✅     |        ✅        |            ✅            |      ❌      |      ❌       |
+| 14.9.207.29 |    ✅     |        ✅        |            ✅            |      ❌      |      ❌       |
 | 14.8.178.28 |    ✅     |        ✅        |            ✅            |      ❌      |      ❌       |
 | 14.7.173.22 |    ✅     |        ✅        |            ✅            |      ❌      |      ❌       |
 | 14.6.202.34 |    ✅     |        ✅        |            ✅            |      ✅      |      ❌       |

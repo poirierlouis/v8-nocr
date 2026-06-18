@@ -2,13 +2,14 @@ name: Build - Linux
 
 on:
   workflow_dispatch:
+  pull_request:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     env:
-      V8_VERSION: 14.9.207.27
+      V8_VERSION: 14.9.207.29
 
     steps:
       - name: Checkout Repository
