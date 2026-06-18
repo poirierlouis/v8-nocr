@@ -6,7 +6,6 @@ on:
     workflows: ["Build - Windows"]
     types:
       - completed
-  pull_request:
 
 jobs:
   build:

@@ -6,7 +6,6 @@ on:
     workflows: ["Build - Linux"]
     types:
       - completed
-  pull_request:
 
 jobs:
   build:
