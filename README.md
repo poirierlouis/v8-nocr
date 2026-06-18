@@ -37,12 +37,19 @@ as-is. It currently lacks a workflow to run tests provided in V8's repository.
 
 ## Releases
 
+Archives are compressed using the [LZMA] algorithm, thanks to 7-Zip. You'll
+need [7-Zip] to extract them on your system.
+
 | Version     |                                 Windows                                  |                                  Linux                                   |
 |-------------|:------------------------------------------------------------------------:|:------------------------------------------------------------------------:|
 | 14.9.207.29 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.9.207.29) | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.9.207.29) |
 | 14.8.178.28 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.8.178.28) |                                    -                                     |
 | 14.7.173.22 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.7.173.22) |                                    -                                     |
 | 14.6.202.34 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.6.202.34) |                                    -                                     |
+
+<!-- Links -->
+[LZMA]: https://wikipedia.org/wiki/LZMA
+[7-Zip]: https://www.7-zip.org
 
 ## Features
 
