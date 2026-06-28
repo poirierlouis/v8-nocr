@@ -2,6 +2,7 @@ name: Build - Windows
 
 on:
   workflow_dispatch:
+  pull_request:
 
 jobs:
   build:
@@ -9,7 +10,7 @@ jobs:
 
     env:
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
-      V8_VERSION: 14.9.207.35
+      V8_VERSION: 15.0.245.15
 
     steps:
       - name: Checkout Repository
@@ -20,14 +21,14 @@ jobs:
         run: |
           New-Item -ItemType Directory -Force -Path "C:\llvm-clang"
           
-          Write-Host "Downloading LLVM 22.1.7"
+          Write-Host "Downloading LLVM 22.1.8"
           $ProgressPreference = 'SilentlyContinue'
-          curl.exe -L -o "llvm-clang.tar.xz" "https://github.com/llvm/llvm-project/releases/download/llvmorg-22.1.7/clang+llvm-22.1.7-x86_64-pc-windows-msvc.tar.xz"
+          curl.exe -L -o "llvm-clang.tar.xz" "https://github.com/llvm/llvm-project/releases/download/llvmorg-22.1.8/clang+llvm-22.1.8-x86_64-pc-windows-msvc.tar.xz"
           
-          Write-Host "Installing LLVM 22.1.7"
+          Write-Host "Installing LLVM 22.1.8"
           tar -xf llvm-clang.tar.xz -C "C:\llvm-clang"
-          Rename-Item -Path "C:\llvm-clang\clang+llvm-22.1.7-x86_64-pc-windows-msvc" -NewName "22.1.7"
-          echo "C:\llvm-clang\22.1.7\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          Rename-Item -Path "C:\llvm-clang\clang+llvm-22.1.8-x86_64-pc-windows-msvc" -NewName "22.1.8"
+          echo "C:\llvm-clang\22.1.8\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
       - name: Install depot_tools
         shell: cmd
@@ -49,7 +50,7 @@ jobs:
           call fetch v8
           cd v8
           git checkout ${{ env.V8_VERSION }}
-          call gclient sync -D --force --reset
+          call gclient sync -D --no-history --reset
 
       - name: Patch V8
         shell: cmd

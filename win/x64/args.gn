@@ -29,5 +29,5 @@ v8_enable_temporal_support=false
 v8_enable_sandbox=false
 v8_enable_pointer_compression=true
 
-clang_base_path="C:\llvm-clang\22.1.7"
+clang_base_path="C:\llvm-clang\22.1.8"
 clang_version="22"
