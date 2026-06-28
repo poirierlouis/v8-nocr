@@ -40,12 +40,13 @@ as-is. It currently lacks a workflow to run tests provided in V8's repository.
 Archives are compressed using [LZMA] algorithm. You'll need [7-Zip] to extract
 them on your system.
 
-| Version     |                                 Windows                                  |                                  Linux                                   |
-|-------------|:------------------------------------------------------------------------:|:------------------------------------------------------------------------:|
-| 14.9.207.35 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.9.207.35) | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.9.207.35) |
-| 14.8.178.28 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.8.178.28) |                                    -                                     |
-| 14.7.173.22 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.7.173.22) |                                    -                                     |
-| 14.6.202.34 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.6.202.34) |                                    -                                     |
+| Version      |                                 Windows                                  |                                  Linux                                   |
+|--------------|:------------------------------------------------------------------------:|:------------------------------------------------------------------------:|
+| 15.0.245.5   | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.0.245.5)  |                                    -                                     |
+| 14.9.207.35  | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.9.207.35) | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.9.207.35) |
+| 14.8.178.28  | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.8.178.28) |                                    -                                     |
+| 14.7.173.22  | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.7.173.22) |                                    -                                     |
+| 14.6.202.34  | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.6.202.34) |                                    -                                     |
 
 <!-- Links -->
 [LZMA]: https://wikipedia.org/wiki/LZMA
@@ -53,8 +54,9 @@ them on your system.
 
 ## Features
 
-|     Version | i18n[^1] | WebAssembly[^2] | Pointer Compression[^3] | Sandbox[^4] | Temporal[^5] |
-|------------:|:--------:|:---------------:|:-----------------------:|:-----------:|:------------:|
+| Version     | i18n[^1] | WebAssembly[^2] | Pointer Compression[^3] | Sandbox[^4] | Temporal[^5] |
+|-------------|:--------:|:---------------:|:-----------------------:|:-----------:|:------------:|
+| 15.0.245.5  |    ✅     |        ✅        |            ✅            |      ❌      |      ❌       |
 | 14.9.207.35 |    ✅     |        ✅        |            ✅            |      ❌      |      ❌       |
 | 14.8.178.28 |    ✅     |        ✅        |            ✅            |      ❌      |      ❌       |
 | 14.7.173.22 |    ✅     |        ✅        |            ✅            |      ❌      |      ❌       |
