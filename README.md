@@ -42,6 +42,7 @@ them on your system.
 
 | Version     |                                 Windows                                  |                                  Linux                                   |
 |-------------|:------------------------------------------------------------------------:|:------------------------------------------------------------------------:|
+| 15.0.245.15 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.0.245.15) | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.0.245.15) |
 | 14.9.207.35 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.9.207.35) | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.9.207.35) |
 | 14.8.178.28 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.8.178.28) |                                    -                                     |
 | 14.7.173.22 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v14.7.173.22) |                                    -                                     |
@@ -53,8 +54,9 @@ them on your system.
 
 ## Features
 
-|     Version | i18n[^1] | WebAssembly[^2] | Pointer Compression[^3] | Sandbox[^4] | Temporal[^5] |
-|------------:|:--------:|:---------------:|:-----------------------:|:-----------:|:------------:|
+| Version     | i18n[^1] | WebAssembly[^2] | Pointer Compression[^3] | Sandbox[^4] | Temporal[^5] |
+|-------------|:--------:|:---------------:|:-----------------------:|:-----------:|:------------:|
+| 15.0.245.15 |    ✅     |        ✅        |            ✅            |      ❌      |      ❌       |
 | 14.9.207.35 |    ✅     |        ✅        |            ✅            |      ❌      |      ❌       |
 | 14.8.178.28 |    ✅     |        ✅        |            ✅            |      ❌      |      ❌       |
 | 14.7.173.22 |    ✅     |        ✅        |            ✅            |      ❌      |      ❌       |
