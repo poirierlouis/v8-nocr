@@ -14,7 +14,7 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
 
     env:
-      V8_VERSION: 15.0.245.15
+      V8_VERSION: 15.0.245.19
 
     steps:
       - name: Checkout Repository
