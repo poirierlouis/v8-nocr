@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      V8_VERSION: 15.0.245.19
+      V8_VERSION: 15.0.245.21
 
     steps:
       - name: Checkout Repository
