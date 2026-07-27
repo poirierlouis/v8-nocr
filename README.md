@@ -6,7 +6,7 @@ a non-Chromium-based build pipeline of V8.
 
 It still uses [GN] and [Ninja] but patches are applied based on the version
 number when required. This is mostly meant to support Windows. As of [September
-2024], Google dropped support for MSVC compiler / MSVC STL headers.
+2024], Google dropped support for MSVC compiler / MSVC STL.
 
 <!-- Links -->
 [V8]: https://v8.dev/docs
@@ -54,7 +54,7 @@ them on your system.
 
 ## Features
 
-| Version     | i18n[^1] | WebAssembly[^2] | Pointer Compression[^3] | Sandbox[^4] | Temporal[^5] |
+| Version     | Intl[^1] | WebAssembly[^2] | Pointer Compression[^3] | Sandbox[^4] | Temporal[^5] |
 |-------------|:--------:|:---------------:|:-----------------------:|:-----------:|:------------:|
 | 15.0.245.23 |    ✅    |       ✅        |           ✅            |     ❌      |      ❌      |
 | 14.9.207.35 |    ✅    |       ✅        |           ✅            |     ❌      |      ❌      |
