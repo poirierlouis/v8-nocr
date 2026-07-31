@@ -21,20 +21,21 @@ jobs:
           sudo apt-get install -y libglib2.0-dev pkg-config
           sudo apt-get install -y build-essential
 
-      - name: Install LLVM/Clang v24
+      - name: Install LLVM/Clang v23
         run: |
-          wget https://apt.llvm.org/llvm.sh
-          chmod +x llvm.sh
-          sudo ./llvm.sh 24
+          wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+          sudo add-apt-repository -y "deb http://apt.llvm.org/noble/ llvm-toolchain-noble-23 main"
+          sudo apt-get update
+          sudo apt-get install -y clang-23 lldb-23 lld-23 clangd-23
 
-      - name: Setup LLVM/Clang v24
+      - name: Setup LLVM/Clang v23
         run: |
-          echo "/usr/lib/llvm-24" >> $GITHUB_PATH
+          echo "/usr/lib/llvm-23" >> $GITHUB_PATH
           
-          sudo ln -s /usr/lib/llvm-24/lib/clang/24/lib/linux \
-                     /usr/lib/llvm-24/lib/clang/24/lib/x86_64-unknown-linux-gnu
-          sudo ln -s /usr/lib/llvm-24/lib/clang/24/lib/linux/libclang_rt.builtins-x86_64.a \
-                     /usr/lib/llvm-24/lib/clang/24/lib/linux/libclang_rt.builtins.a
+          sudo ln -s /usr/lib/llvm-23/lib/clang/23/lib/linux \
+                     /usr/lib/llvm-23/lib/clang/23/lib/x86_64-unknown-linux-gnu
+          sudo ln -s /usr/lib/llvm-23/lib/clang/23/lib/linux/libclang_rt.builtins-x86_64.a \
+                     /usr/lib/llvm-23/lib/clang/23/lib/linux/libclang_rt.builtins.a
 
       - name: Install depot_tools
         run: |

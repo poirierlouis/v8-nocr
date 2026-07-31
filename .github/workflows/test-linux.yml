@@ -31,15 +31,16 @@ jobs:
           check_artifacts: true
           search_artifacts: true
 
-      - name: Install LLVM/Clang v24
+      - name: Install LLVM/Clang v23
         run: |
-          wget https://apt.llvm.org/llvm.sh
-          chmod +x llvm.sh
-          sudo ./llvm.sh 24
+          wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+          sudo add-apt-repository -y "deb http://apt.llvm.org/noble/ llvm-toolchain-noble-23 main"
+          sudo apt-get update
+          sudo apt-get install -y clang-23 lldb-23 lld-23 clangd-23
 
       - name: Compile examples
         run: |
-          /usr/lib/llvm-24/bin/clang++ -std=c++20 \
+          /usr/lib/llvm-23/bin/clang++ -std=c++20 \
                                        -fuse-ld=lld \
                                        -O3 \
                                        -DV8_COMPRESS_POINTERS \
@@ -50,7 +51,7 @@ jobs:
                                        -lrt -ldl -pthread -latomic \
                                        -o hello_world
           
-          /usr/lib/llvm-24/bin/clang++ -std=c++20 \
+          /usr/lib/llvm-23/bin/clang++ -std=c++20 \
                                        -fuse-ld=lld \
                                        -O3 \
                                        -DV8_COMPRESS_POINTERS \
@@ -61,7 +62,7 @@ jobs:
                                        -lrt -ldl -pthread -latomic \
                                        -o intl
           
-          /usr/lib/llvm-24/bin/clang++ -std=c++20 \
+          /usr/lib/llvm-23/bin/clang++ -std=c++20 \
                                        -fuse-ld=lld \
                                        -O3 \
                                        -DV8_COMPRESS_POINTERS \
