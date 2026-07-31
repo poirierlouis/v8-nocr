@@ -30,5 +30,5 @@ v8_enable_temporal_support=false
 v8_enable_sandbox=false
 v8_enable_pointer_compression=true
 
-clang_base_path="/usr/lib/llvm-23"
-clang_version="23"
+clang_base_path="/usr/lib/llvm-22"
+clang_version="22"
