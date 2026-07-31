@@ -31,15 +31,15 @@ jobs:
           check_artifacts: true
           search_artifacts: true
 
-      - name: Install LLVM/Clang v22
+      - name: Install LLVM/Clang v24
         run: |
           wget https://apt.llvm.org/llvm.sh
           chmod +x llvm.sh
-          sudo ./llvm.sh 22
+          sudo ./llvm.sh 24
 
       - name: Compile examples
         run: |
-          /usr/lib/llvm-22/bin/clang++ -std=c++20 \
+          /usr/lib/llvm-24/bin/clang++ -std=c++20 \
                                        -fuse-ld=lld \
                                        -O3 \
                                        -DV8_COMPRESS_POINTERS \
@@ -50,7 +50,7 @@ jobs:
                                        -lrt -ldl -pthread -latomic \
                                        -o hello_world
           
-          /usr/lib/llvm-22/bin/clang++ -std=c++20 \
+          /usr/lib/llvm-24/bin/clang++ -std=c++20 \
                                        -fuse-ld=lld \
                                        -O3 \
                                        -DV8_COMPRESS_POINTERS \
@@ -61,7 +61,7 @@ jobs:
                                        -lrt -ldl -pthread -latomic \
                                        -o intl
           
-          /usr/lib/llvm-22/bin/clang++ -std=c++20 \
+          /usr/lib/llvm-24/bin/clang++ -std=c++20 \
                                        -fuse-ld=lld \
                                        -O3 \
                                        -DV8_COMPRESS_POINTERS \
