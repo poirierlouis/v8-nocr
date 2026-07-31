@@ -61,8 +61,29 @@ jobs:
           cd build
           git apply --3way --ignore-whitespace ..\..\win\x64\patches\${{ env.V8_VERSION }}\build\v8.patch
 
+      - name: Link Windows SDK 10.0.28000.0 to 10.0.26100.0
+        shell: powershell
+        run: |
+          $kitsPath = "C:\Program Files (x86)\Windows Kits\10"
+          $targetVersion = "10.0.26100.0"
+          $aliasVersion = "10.0.28000.0"
+          
+          $subdirs = @("include", "Lib", "Source", "UnionMetadata", "References")
+          
+          foreach ($dir in $subdirs) {
+            $sourcePath = Join-Path $kitsPath "$dir\$targetVersion"
+            $linkPath   = Join-Path $kitsPath "$dir\$aliasVersion"
+            
+            if ((Test-Path $sourcePath) -and (-not (Test-Path $linkPath))) {
+              Write-Host "Creating Junction: $linkPath -> $sourcePath"
+              New-Item -ItemType Junction -Path $linkPath -Value $sourcePath
+            }
+          }
+
       - name: Run GN
         shell: cmd
+        env:
+          DEPOT_TOOLS_WIN_TOOLCHAIN: "0"
         run: |
           cd v8\
           mkdir out\release
