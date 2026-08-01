@@ -16,7 +16,15 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v7
 
+      - name: Cache LLVM
+        id: cache-llvm
+        uses: actions/cache@v6
+        with:
+          path: C:\llvm-clang
+          key: llvm-22.1.8-win64
+
       - name: Install LLVM/Clang v22
+        if: steps.cache-llvm.outputs.cache-hit != 'true'
         shell: powershell
         run: |
           New-Item -ItemType Directory -Force -Path "C:\llvm-clang"
@@ -28,13 +36,27 @@ jobs:
           Write-Host "Installing LLVM 22.1.8"
           tar -xf llvm-clang.tar.xz -C "C:\llvm-clang"
           Rename-Item -Path "C:\llvm-clang\clang+llvm-22.1.8-x86_64-pc-windows-msvc" -NewName "22.1.8"
-          echo "C:\llvm-clang\22.1.8\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: Setup LLVM/Clang v22
+        shell: powershell
+        run: echo "C:\llvm-clang\22.1.8\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: Cache depot_tools
+        id: cache-depot-tools
+        uses: actions/cache@v6
+        with:
+          path: C:\depot_tools
+          key: depot-tools-win64
 
       - name: Install depot_tools
+        if: steps.cache-depot-tools.outputs.cache-hit != 'true'
         shell: cmd
         run: |
           git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git C:\depot_tools
-          echo C:\depot_tools>> %GITHUB_PATH%
+
+      - name: Setup depot_tools
+        shell: cmd
+        run: echo C:\depot_tools>> %GITHUB_PATH%
 
       - name: Configure depot_tools
         shell: cmd
@@ -44,10 +66,20 @@ jobs:
           call gclient
           git config --global depot-tools.allowGlobalGitConfig true
 
+      - name: Cache V8 Source
+        id: cache-v8
+        uses: actions/cache@v6
+        with:
+          path: |
+            v8
+            .gclient
+            .gclient_entries
+          key: v8-${{ env.V8_VERSION }}-win64
+
       - name: Fetch V8
         shell: cmd
         run: |
-          call fetch v8
+          if not exist v8 call fetch v8
           cd v8
           git checkout ${{ env.V8_VERSION }}
           call gclient sync -D --no-history --reset
