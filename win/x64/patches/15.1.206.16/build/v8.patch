@@ -1,11 +1,16 @@
 diff --git a/config/win/BUILD.gn b/config/win/BUILD.gn
-index 4e4ab177d..e28debb68 100644
+index 101c23396..3c3a6a7ec 100644
 --- a/config/win/BUILD.gn
 +++ b/config/win/BUILD.gn
-@@ -222,6 +222,8 @@ config("runtime_library") {
+@@ -225,6 +225,13 @@ config("runtime_library") {
    cflags = []
    cflags_cc = []
  
++  cflags += [
++    "-Wno-unknown-argument", "-Wno-unknown-warning-option",
++    "-D_SILENCE_ALL_CXX20_DEPRECATION_WARNINGS"
++  ]
++
 +  ldflags = [ "/LIBPATH:" + getenv("VCINSTALLDIR") + "\\Tools\\MSVC\\" + getenv("VCToolsVersion") + "\\lib\\x64" ]
 +
    # Defines that set up the CRT.

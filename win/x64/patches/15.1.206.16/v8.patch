@@ -1,3 +1,16 @@
+diff --git a/BUILD.gn b/BUILD.gn
+index a19ec521254..b5e4833c5fa 100644
+--- a/BUILD.gn
++++ b/BUILD.gn
+@@ -1828,7 +1828,7 @@ config("toolchain") {
+       # Google3 enables this warning, so we should also enable it to find issue
+       # earlier. See https://reviews.llvm.org/D56731 for details about this
+       # warning.
+-      cflags += [ "-Wctad-maybe-unsupported" ]
++      cflags += [ "-Wno-deprecated-declarations" ]
+     }
+ 
+     if (is_clang && use_cppgc_clang_plugin && clang_use_chrome_plugins) {
 diff --git a/src/base/functional/bind-internal.h b/src/base/functional/bind-internal.h
 index 160664af5dd..e3d2bb73f66 100644
 --- a/src/base/functional/bind-internal.h
@@ -69,3 +82,53 @@ index 160664af5dd..e3d2bb73f66 100644
  // Provides functor traits for pre-decayed functor types.
  template <typename Functor, typename... BoundArgs>
  struct DecayedFunctorTraits;
+diff --git a/src/objects/js-interceptor-map.tq b/src/objects/js-interceptor-map.tq
+index 7a0838bb84d..6adcd4f9421 100644
+--- a/src/objects/js-interceptor-map.tq
++++ b/src/objects/js-interceptor-map.tq
+@@ -8,7 +8,7 @@
+ @hasSameInstanceTypeAsParent
+ @doNotGenerateCast
+ extern class JSInterceptorMap extends ExtendedMap {
+-  @ifnot(TAGGED_SIZE_8_BYTES) extended_padding[3]: uint8;
++  @ifnot(TAGGED_SIZE_8_BYTES) extended_padding[4]: uint8;
+   @if(TAGGED_SIZE_8_BYTES) extended_padding[7]: uint8;
+   named_interceptor: InterceptorInfo;
+   indexed_interceptor: InterceptorInfo;
+diff --git a/src/objects/map.h b/src/objects/map.h
+index 6b2c8e6acf7..f77a93c3189 100644
+--- a/src/objects/map.h
++++ b/src/objects/map.h
+@@ -1286,6 +1286,7 @@ V8_ABSTRACT_OBJECT class ExtendedMap : public Map {
+ 
+   std::atomic<uint8_t> bit_field_ex_;
+   // Leaves kTaggedSize-1 unused bytes, they will be used by subclasses.
++  uint8_t patch_msvc_padding_[3];
+ } V8_OBJECT_END;
+ 
+ constexpr int ExtendedMapSizeForKind(ExtendedMapKind kind);
+diff --git a/src/objects/map.tq b/src/objects/map.tq
+index a32cb5bdc32..78af2230a11 100644
+--- a/src/objects/map.tq
++++ b/src/objects/map.tq
+@@ -114,6 +114,7 @@ bitfield struct ExtendedMapBitFields extends uint8 {
+ extern class ExtendedMap extends Map {
+   bit_field_ex: ExtendedMapBitFields;
+   // Leaves kTaggedSize-1 unused bytes, they will be used by subclasses.
++  patch_msvc_padding[3]: uint8;
+ }
+ 
+ @export
+diff --git a/src/runtime/runtime-test.cc b/src/runtime/runtime-test.cc
+index 49c40c126b1..33884dfcf2a 100644
+--- a/src/runtime/runtime-test.cc
++++ b/src/runtime/runtime-test.cc
+@@ -1193,7 +1193,7 @@ RUNTIME_FUNCTION(Runtime_SetAllocationTimeout) {
+   CONVERT_INT32_ARG_FUZZ_SAFE(timeout, 1);
+   isolate->heap()->set_allocation_timeout(timeout);
+ #else   // !V8_ENABLE_ALLOCATION_TIMEOUT
+-  static std::atomic_flag printed_warning{false};
++  static std::atomic_flag printed_warning;
+   if (!printed_warning.test_and_set()) {
+     base::OS::PrintError(
+         "Warning: %%SetAllocationTimeout has no effect in this build. Set the "
