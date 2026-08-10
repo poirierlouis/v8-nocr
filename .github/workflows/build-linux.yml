@@ -9,7 +9,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      V8_VERSION: 15.0.245.23
+      V8_VERSION: 15.1.206.16
+      LLVM_VERSION: 23
 
     steps:
       - name: Checkout Repository
@@ -21,20 +22,28 @@ jobs:
           sudo apt-get install -y libglib2.0-dev pkg-config
           sudo apt-get install -y build-essential
 
-      - name: Install LLVM/Clang v23
+      - name: Cache LLVM/Clang
+        id: cache-llvm
+        uses: actions/cache@v6
+        with:
+          path: /usr/lib/llvm-${{ env.LLVM_VERSION }}
+          key: llvm-clang-${{ env.LLVM_VERSION }}-linux64
+
+      - name: Install LLVM/Clang
+        if: steps.cache-llvm.outputs.cache-hit != 'true'
         run: |
           wget https://apt.llvm.org/llvm.sh
           chmod +x llvm.sh
-          sudo ./llvm.sh 23
+          sudo ./llvm.sh ${{ env.LLVM_VERSION }}
 
-      - name: Setup LLVM/Clang v23
+      - name: Setup LLVM/Clang
         run: |
-          echo "/usr/lib/llvm-23" >> $GITHUB_PATH
-          
-          sudo ln -s /usr/lib/llvm-23/lib/clang/23/lib/linux \
-                     /usr/lib/llvm-23/lib/clang/23/lib/x86_64-unknown-linux-gnu
-          sudo ln -s /usr/lib/llvm-23/lib/clang/23/lib/linux/libclang_rt.builtins-x86_64.a \
-                     /usr/lib/llvm-23/lib/clang/23/lib/linux/libclang_rt.builtins.a
+          sudo ln -s /usr/lib/llvm-${{ env.LLVM_VERSION }}/lib/clang/${{ env.LLVM_VERSION }}/lib/linux \
+                     /usr/lib/llvm-${{ env.LLVM_VERSION }}/lib/clang/${{ env.LLVM_VERSION }}/lib/x86_64-unknown-linux-gnu
+          sudo ln -s /usr/lib/llvm-${{ env.LLVM_VERSION }}/lib/clang/${{ env.LLVM_VERSION }}/lib/linux/libclang_rt.builtins-x86_64.a \
+                     /usr/lib/llvm-${{ env.LLVM_VERSION }}/lib/clang/${{ env.LLVM_VERSION }}/lib/linux/libclang_rt.builtins.a
+
+          echo "/usr/lib/llvm-${{ env.LLVM_VERSION }}" >> $GITHUB_PATH
 
       - name: Install depot_tools
         run: |
@@ -43,15 +52,15 @@ jobs:
 
       - name: Configure depot_tools
         run: |
-          gclient
           git config --global depot-tools.allowGlobalGitConfig true
+          gclient
 
       - name: Fetch V8
         run: |
           fetch v8
           cd v8
           git checkout ${{ env.V8_VERSION }}
-          gclient sync -D
+          gclient sync -D --no-history --reset
 
       - name: Patch V8
         run: |
