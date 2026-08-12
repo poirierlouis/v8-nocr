@@ -10,25 +10,91 @@ jobs:
 
     env:
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
-      V8_VERSION: 15.0.245.23
+      V8_VERSION: 15.1.206.16
+      LLVM_VERSION: 22.1.8
+      WINSDK_VERSION: 10.0.28000.0
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v6
 
-      - name: Install LLVM/Clang v22
+      - name: Cache Windows SDK
+        id: cache-winsdk
+        uses: actions/cache@v6
+        with:
+          path: |
+            C:\Program Files (x86)\Windows Kits\10\Include\${{ env.WINSDK_VERSION }}
+            C:\Program Files (x86)\Windows Kits\10\Lib\${{ env.WINSDK_VERSION }}
+            C:\Program Files (x86)\Windows Kits\10\bin\${{ env.WINSDK_VERSION }}
+          key: winsdk-${{ env.WINSDK_VERSION }}-win64
+
+      - name: Install Windows SDK
+        if: steps.cache-winsdk.outputs.cache-hit != 'true'
+        shell: powershell
+        run: |
+          $vsPath = (vswhere -latest -property installationPath)
+          $installer = "C:\Program Files (x86)\Microsoft Visual Studio\Installer\setup.exe"
+          
+          Write-Host "Installing Windows SDK ${{ env.WINSDK_VERSION }}"
+          $arguments = @(
+            'modify',
+            '--installPath', "`"$vsPath`"",
+            '--add', 'Microsoft.VisualStudio.Component.Windows11SDK.28000',
+            '--quiet', '--norestart', '--nocache', '--noUpdateInstaller'
+          )
+          $process = Start-Process -FilePath $installer -ArgumentList $arguments -Wait -PassThru
+          if ($process.ExitCode -ne 0 -and $process.ExitCode -ne 3010) {
+            throw "Installation failed with exit code $($process.ExitCode)"
+          }
+
+      - name: Register Windows SDK
+        if: steps.cache-winsdk.outputs.cache-hit == 'true'
+        shell: powershell
+        run: |
+          $sdkRoot = "C:\Program Files (x86)\Windows Kits\10\"
+          $fullVersion = "${{ env.WINSDK_VERSION }}"
+          $productVersion = $fullVersion -replace '\.0$', ''
+          
+          # Keys used by Chromium's vs_toolchain.py / MSVC setup tools
+          foreach ($key in @("HKLM:\SOFTWARE\Microsoft\Windows Kits\Installed Roots", "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows Kits\Installed Roots")) {
+            New-Item -Path $key -Force | Out-Null
+            Set-ItemProperty -Path $key -Name KitsRoot10 -Value $sdkRoot -Type String
+            New-Item -Path "$key\$fullVersion" -Force | Out-Null
+          }
+          
+          # Keys used by vcvarsall.bat / winsdk.bat to locate the SDK
+          foreach ($key in @("HKLM:\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v10.0", "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Microsoft SDKs\Windows\v10.0")) {
+            New-Item -Path $key -Force | Out-Null
+            Set-ItemProperty -Path $key -Name InstallationFolder -Value $sdkRoot -Type String
+            Set-ItemProperty -Path $key -Name ProductVersion -Value $productVersion -Type String
+            Set-ItemProperty -Path $key -Name ProductName -Value "Microsoft Windows SDK for Windows $productVersion" -Type String
+          }
+
+      - name: Cache LLVM/Clang
+        id: cache-llvm
+        uses: actions/cache@v6
+        with:
+          path: C:\llvm-clang\${{ env.LLVM_VERSION }}
+          key: llvm-clang-${{ env.LLVM_VERSION }}-win64
+
+      - name: Install LLVM/Clang
+        if: steps.cache-llvm.outputs.cache-hit != 'true'
         shell: powershell
         run: |
           New-Item -ItemType Directory -Force -Path "C:\llvm-clang"
           
-          Write-Host "Downloading LLVM 22.1.8"
+          Write-Host "Downloading LLVM ${{ env.LLVM_VERSION }}"
           $ProgressPreference = 'SilentlyContinue'
-          curl.exe -L -o "llvm-clang.tar.xz" "https://github.com/llvm/llvm-project/releases/download/llvmorg-22.1.8/clang+llvm-22.1.8-x86_64-pc-windows-msvc.tar.xz"
+          curl.exe -L -o "llvm-clang.tar.xz" "https://github.com/llvm/llvm-project/releases/download/llvmorg-${{ env.LLVM_VERSION }}/clang+llvm-${{ env.LLVM_VERSION }}-x86_64-pc-windows-msvc.tar.xz"
           
-          Write-Host "Installing LLVM 22.1.8"
+          Write-Host "Installing LLVM ${{ env.LLVM_VERSION }}"
           tar -xf llvm-clang.tar.xz -C "C:\llvm-clang"
-          Rename-Item -Path "C:\llvm-clang\clang+llvm-22.1.8-x86_64-pc-windows-msvc" -NewName "22.1.8"
-          echo "C:\llvm-clang\22.1.8\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          Rename-Item -Path "C:\llvm-clang\clang+llvm-${{ env.LLVM_VERSION }}-x86_64-pc-windows-msvc" -NewName "${{ env.LLVM_VERSION }}"
+
+      - name: Add LLVM/Clang to PATH
+        shell: powershell
+        run: |
+          echo "C:\llvm-clang\${{ env.LLVM_VERSION }}\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
       - name: Install depot_tools
         shell: cmd
@@ -41,8 +107,8 @@ jobs:
         env:
           PYTHONHTTPSVERIFY: 0
         run: |
-          call gclient
           git config --global depot-tools.allowGlobalGitConfig true
+          call gclient
 
       - name: Fetch V8
         shell: cmd
