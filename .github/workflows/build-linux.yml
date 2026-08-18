@@ -9,12 +9,12 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      V8_VERSION: 15.1.206.16
+      V8_VERSION: 15.1.206.17
       LLVM_VERSION: 23
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup build tools
         run: |
