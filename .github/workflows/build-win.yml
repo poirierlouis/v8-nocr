@@ -102,6 +102,16 @@ jobs:
           toolchain: nightly-2026-08-18
           targets: x86_64-pc-windows-msvc
 
+      - name: Install bindgen
+        shell: cmd
+        run: |
+          cargo install bindgen-cli
+
+      - name: Configure LIBCLANG_PATH
+        shell: powershell
+        run: |
+          Add-Content -Path $env:GITHUB_ENV -Value "LIBCLANG_PATH=C:\llvm-clang\${{ env.LLVM_VERSION }}\bin"
+
       - name: Install depot_tools
         shell: cmd
         run: |
