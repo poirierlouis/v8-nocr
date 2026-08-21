@@ -14,7 +14,7 @@ jobs:
       LLVM_VERSION: 22.1.8
       WINSDK_VERSION: 10.0.28000.0
       RUSTUP_HOME: D:\.rustup
-      LIBCLANG_PATH: C:\llvm-clang\15.2.124.8\bin
+      LIBCLANG_PATH: C:\llvm-clang\22.1.8\bin
 
     steps:
       - name: Checkout Repository
