@@ -14,7 +14,8 @@ use_lld=false
 
 use_clang_modules=false
 clang_use_chrome_plugins=false
-enable_rust=false
+
+enable_rust=true
 
 v8_monolithic=true
 v8_static_library=true
@@ -25,9 +26,13 @@ v8_use_external_startup_data=false
 v8_enable_fuzztest=false
 v8_enable_i18n_support=true
 v8_enable_webassembly=true
-v8_enable_temporal_support=false
-v8_enable_sandbox=false
 v8_enable_pointer_compression=true
+v8_enable_temporal_support=true
+v8_enable_sandbox=false
 
 clang_base_path="C:\llvm-clang\22.1.8"
 clang_version="22"
+
+rust_sysroot_absolute="C:/Users/runneradmin/.rustup/toolchains/nightly-2026-08-18-x86_64-pc-windows-msvc"
+rust_bindgen_root="C:/Users/runneradmin/.cargo"
+rustc_version="1.98.0"

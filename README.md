@@ -20,12 +20,21 @@ number when required. This is mostly meant to support Windows. As of [September
 2. Extract in the desired location (e.g. `vendors\v8\`).
 3. Include headers (e.g. `vendors\v8\include`).
 4. Link with the static library (e.g. `vendors\v8\lib\v8_monolith.lib`).
-5. Enable features:
+5. Link with system libraries:
+ - `dbghelp.lib`
+ - `winmm.lib`
+ - `ws2_32.lib`
+ - `userenv.lib`
+ - `ntdll.lib`
+6. Enable features:
 ```
 /DV8_COMPRESS_POINTERS
 /DV8_ENABLE_WEBASSEMBLY
 ```
-6. Build your project
+7. Build your project
+
+> [!TIP]
+> See `examples/` directory and `test-*.yml` workflows.
 
 <!-- Links -->
 [release]: https://github.com/poirierlouis/v8-nocr/releases
@@ -54,16 +63,16 @@ them on your system.
 
 ## Features
 
-| Version     | Intl[^1] | WebAssembly[^2] | Pointer Compression[^3] | Sandbox[^4] | Temporal[^5] |
-|-------------|:--------:|:---------------:|:-----------------------:|:-----------:|:------------:|
-| 15.2.124.8  |    ✅    |       ✅        |           ✅            |     ❌      |      ❌      |
-| 15.1.206.21 |    ✅    |       ✅        |           ✅            |     ❌      |      ❌      |
-| 15.0.245.23 |    ✅    |       ✅        |           ✅            |     ❌      |      ❌      |
-| 14.9.207.35 |    ✅    |       ✅        |           ✅            |     ❌      |      ❌      |
-| 14.8.178.28 |    ✅    |       ✅        |           ✅            |     ❌      |      ❌      |
+| Version     | Intl[^1] | WebAssembly[^2] | Pointer Compression[^3] | Temporal[^4] | Sandbox[^5] |
+|-------------|:--------:|:---------------:|:-----------------------:|:------------:|:-----------:|
+| 15.2.124.8  |    ✅    |       ✅        |           ✅            |      ✅      |     ❌      |
+| 15.1.206.21 |    ✅    |       ✅        |           ✅            |      ❌      |     ❌      |
+| 15.0.245.23 |    ✅    |       ✅        |           ✅            |      ❌      |     ❌      |
+| 14.9.207.35 |    ✅    |       ✅        |           ✅            |      ❌      |     ❌      |
+| 14.8.178.28 |    ✅    |       ✅        |           ✅            |      ❌      |     ❌      |
 
 [^1]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl
 [^2]: https://developer.mozilla.org/en-US/docs/WebAssembly
 [^3]: https://v8.dev/blog/pointer-compression
-[^4]: https://v8.dev/blog/sandbox
-[^5]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal
+[^4]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal
+[^5]: https://v8.dev/blog/sandbox

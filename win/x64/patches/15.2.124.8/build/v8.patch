@@ -16,6 +16,19 @@ index 069432bba..49f3b91eb 100644
    # Defines that set up the CRT.
    defines = [
      "__STD_C",
+diff --git a/rust/rust_bindgen_generator.gni b/rust/rust_bindgen_generator.gni
+index 57167634f..d93f76576 100644
+--- a/rust/rust_bindgen_generator.gni
++++ b/rust/rust_bindgen_generator.gni
+@@ -168,8 +168,6 @@ template("rust_bindgen_generator") {
+       rebase_path(depfile, root_build_dir),
+       "--output",
+       rebase_path(output_file, root_build_dir),
+-      "--libclang-path",
+-      rebase_path(_libclang_path, root_build_dir),
+     ]
+ 
+     if (_wrap_static_fns) {
 diff --git a/toolchain/win/tool_wrapper.py b/toolchain/win/tool_wrapper.py
 index 47bbfe2a0..3bec9006d 100644
 --- a/toolchain/win/tool_wrapper.py

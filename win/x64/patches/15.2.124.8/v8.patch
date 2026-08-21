@@ -1,8 +1,8 @@
 diff --git a/BUILD.gn b/BUILD.gn
-index 03938a26b4d..58c9021504f 100644
+index 39f578a9c8e..b549d1f70c2 100644
 --- a/BUILD.gn
 +++ b/BUILD.gn
-@@ -1846,7 +1846,7 @@ config("toolchain") {
+@@ -1874,7 +1874,7 @@ config("toolchain") {
        # Google3 enables this warning, so we should also enable it to find issue
        # earlier. See https://reviews.llvm.org/D56731 for details about this
        # warning.
@@ -79,23 +79,23 @@ index 160664af5dd..33db5657d91 100644
  template <typename Functor, typename... BoundArgs>
  struct DecayedFunctorTraits;
 diff --git a/src/objects/js-interceptor-map.tq b/src/objects/js-interceptor-map.tq
-index 7a0838bb84d..6adcd4f9421 100644
+index f351cb0fb0a..3f7f5e7d200 100644
 --- a/src/objects/js-interceptor-map.tq
 +++ b/src/objects/js-interceptor-map.tq
-@@ -8,7 +8,7 @@
- @hasSameInstanceTypeAsParent
+@@ -9,7 +9,7 @@
  @doNotGenerateCast
  extern class JSInterceptorMap extends ExtendedMap {
--  @ifnot(TAGGED_SIZE_8_BYTES) extended_padding[3]: uint8;
-+  @ifnot(TAGGED_SIZE_8_BYTES) extended_padding[4]: uint8;
-   @if(TAGGED_SIZE_8_BYTES) extended_padding[7]: uint8;
+   flags: uint8;
+-  @ifnot(TAGGED_SIZE_8_BYTES) extended_padding[2]: uint8;
++  @ifnot(TAGGED_SIZE_8_BYTES) extended_padding[3]: uint8;
+   @if(TAGGED_SIZE_8_BYTES) extended_padding[6]: uint8;
    named_interceptor: InterceptorInfo;
    indexed_interceptor: InterceptorInfo;
 diff --git a/src/objects/map.h b/src/objects/map.h
-index b907c3ddc11..95e6d9363ff 100644
+index 594d4c7c79a..ba1cc649266 100644
 --- a/src/objects/map.h
 +++ b/src/objects/map.h
-@@ -1291,6 +1291,7 @@ V8_ABSTRACT_OBJECT class ExtendedMap : public Map {
+@@ -1289,6 +1289,7 @@ V8_ABSTRACT_OBJECT class ExtendedMap : public Map {
  
    std::atomic<uint8_t> bit_field_ex_;
    // Leaves kTaggedSize-1 unused bytes, they will be used by subclasses.
