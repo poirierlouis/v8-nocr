@@ -13,6 +13,7 @@ jobs:
       V8_VERSION: 15.2.124.8
       LLVM_VERSION: 22.1.8
       WINSDK_VERSION: 10.0.28000.0
+      RUSTUP_HOME: D:\.rustup
 
     steps:
       - name: Checkout Repository
@@ -101,6 +102,7 @@ jobs:
         with:
           toolchain: nightly-2026-08-18
           targets: x86_64-pc-windows-msvc
+          components: rust-src
 
       - name: Install bindgen
         shell: cmd
