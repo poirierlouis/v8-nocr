@@ -94,7 +94,7 @@ jobs:
       - name: Add LLVM/Clang to PATH
         shell: powershell
         run: |
-          echo "C:\llvm-clang\${{ env.LLVM_VERSION }}\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          Add-Content -Path $env:GITHUB_PATH -Value "C:\llvm-clang\${{ env.LLVM_VERSION }}\bin"
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@master
