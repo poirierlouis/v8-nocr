@@ -146,10 +146,8 @@ jobs:
         run: |
           cd v8\ || exit /b 1
           git apply -v --3way --ignore-whitespace ..\win\x64\patches\${{ env.V8_VERSION }}\v8.patch || exit /b 1
-          
           cd build\ || exit /b 1
           git apply -v --3way --ignore-whitespace ..\..\win\x64\patches\${{ env.V8_VERSION }}\build\v8.patch || exit /b 1
-          
           git diff --stat 2>&1
           git diff -- rust/rust_bindgen_generator.gni 2>&1
 
