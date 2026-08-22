@@ -139,16 +139,16 @@ jobs:
           call fetch v8
           cd v8
           git checkout ${{ env.V8_VERSION }}
-          call gclient sync -D --no-history --reset
+          call gclient sync -D
 
       - name: Patch V8
         shell: cmd
         run: |
-          cd v8\
-          git apply -v --3way --ignore-whitespace ..\win\x64\patches\${{ env.V8_VERSION }}\v8.patch
+          cd v8\ || exit /b 1
+          git apply -v --3way --ignore-whitespace ..\win\x64\patches\${{ env.V8_VERSION }}\v8.patch || exit /b 1
           
-          cd build\
-          git apply -v --3way --ignore-whitespace ..\..\win\x64\patches\${{ env.V8_VERSION }}\build\v8.patch
+          cd build\ || exit /b 1
+          git apply -v --3way --ignore-whitespace ..\..\win\x64\patches\${{ env.V8_VERSION }}\build\v8.patch || exit /b 1
 
       - name: Verify Patch
         shell: powershell
