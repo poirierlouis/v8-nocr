@@ -100,11 +100,19 @@ jobs:
           Add-Content -Path $env:GITHUB_PATH -Value "C:\llvm-clang\${{ env.LLVM_VERSION }}\bin"
 
       - name: Install Rust
-        uses: dtolnay/rust-toolchain@master
-        with:
-          toolchain: nightly-2026-08-18
-          targets: x86_64-pc-windows-msvc
-          components: rust-src, rustfmt
+        shell: powershell
+        run: |
+          Invoke-WebRequest -Uri "https://win.rustup.rs/x86_64" -OutFile "rustup-init.exe"
+          .\rustup-init.exe -y --default-toolchain nightly-2026-08-18
+          
+          # Add the required source code component
+          #D:\.cargo\bin\rustup component add rust-src --toolchain nightly-2026-08-18
+          
+          # Add the binary shims directory to the GitHub path
+          Add-Content -Path $env:GITHUB_PATH -Value "D:\.cargo\bin"
+          
+          rustc --version
+          cargo --version
 
       - name: Install bindgen
         shell: cmd
