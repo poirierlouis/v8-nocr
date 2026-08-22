@@ -10,9 +10,12 @@ jobs:
 
     env:
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
-      V8_VERSION: 15.1.206.21
+      V8_VERSION: 15.2.124.8
       LLVM_VERSION: 22.1.8
       WINSDK_VERSION: 10.0.28000.0
+      RUSTUP_HOME: D:\.rustup
+      CARGO_HOME: D:\.cargo
+      LIBCLANG_PATH: C:\llvm-clang\22.1.8\bin
 
     steps:
       - name: Checkout Repository
@@ -94,7 +97,27 @@ jobs:
       - name: Add LLVM/Clang to PATH
         shell: powershell
         run: |
-          echo "C:\llvm-clang\${{ env.LLVM_VERSION }}\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          Add-Content -Path $env:GITHUB_PATH -Value "C:\llvm-clang\${{ env.LLVM_VERSION }}\bin"
+
+      - name: Install Rust
+        shell: powershell
+        run: |
+          Invoke-WebRequest -Uri "https://win.rustup.rs/x86_64" -OutFile "rustup-init.exe"
+          .\rustup-init.exe -y --default-toolchain nightly-2026-08-18
+          
+          # Add the required source code component
+          #D:\.cargo\bin\rustup component add rust-src --toolchain nightly-2026-08-18
+          
+          # Add the binary shims directory to the GitHub path
+          Add-Content -Path $env:GITHUB_PATH -Value "D:\.cargo\bin"
+          
+          rustc --version
+          cargo --version
+
+      - name: Install bindgen
+        shell: cmd
+        run: |
+          cargo install bindgen-cli
 
       - name: Install depot_tools
         shell: cmd
@@ -125,7 +148,7 @@ jobs:
           git apply --3way --ignore-whitespace ..\win\x64\patches\${{ env.V8_VERSION }}\v8.patch
           
           cd build
-          git apply --3way --ignore-whitespace ..\..\win\x64\patches\${{ env.V8_VERSION }}\build\v8.patch
+          git apply --3way --ignore-whitespace --check ..\..\win\x64\patches\${{ env.V8_VERSION }}\build\v8.patch
 
       - name: Run GN
         shell: cmd
@@ -141,13 +164,23 @@ jobs:
           cd v8\
           call ninja -C out\release v8_monolith
 
+      - name: Merge with Rust libraries
+        shell: powershell
+        run: |
+          cd v8\
+          Get-ChildItem -Path .\out\release\obj -Filter "*.rlib" -Recurse | Select-Object -ExpandProperty FullName | Out-File -Encoding ascii rust_libs.rsp
+          lib.exe /OUT:v8_monolith.lib `
+                  .\out\release\obj\v8_monolith.lib `
+                  .\out\release\obj\third_party\partition_alloc\src\partition_alloc\allocator_shim.lib `
+                  @rust_libs.rsp
+
       - name: Stage Artifact
         shell: cmd
         run: |
           mkdir dist\lib
           mkdir dist\include
           
-          copy v8\out\release\obj\v8_monolith.lib dist\lib\
+          copy v8\v8_monolith.lib dist\lib\
           xcopy v8\include\*.h dist\include /E /I /Y
           copy v8\LICENSE* dist\
 
