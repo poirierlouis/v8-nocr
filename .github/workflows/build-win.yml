@@ -104,7 +104,7 @@ jobs:
         with:
           toolchain: nightly-2026-08-18
           targets: x86_64-pc-windows-msvc
-          components: rust-src
+          components: rust-src, rustfmt
 
       - name: Install bindgen
         shell: cmd
