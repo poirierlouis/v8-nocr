@@ -149,12 +149,16 @@ jobs:
           
           cd build\ || exit /b 1
           git apply -v --3way --ignore-whitespace ..\..\win\x64\patches\${{ env.V8_VERSION }}\build\v8.patch || exit /b 1
+          
+          git diff --stat 2>&1
+          git diff -- rust/rust_bindgen_generator.gni 2>&1
 
       - name: Verify Patch
         shell: powershell
         run: |
           $filePath = "v8\build\rust\rust_bindgen_generator.gni"
           if (Test-Path $filePath) {
+              Select-String -Path $filePath -Pattern "libclang-path"
               Get-Content $filePath | Select-Object -Skip 149 -First 51 | ForEach-Object { "$($PSItem.ReadCount + 149): $_" }
           } else {
               Write-Error "File not found at $filePath"
