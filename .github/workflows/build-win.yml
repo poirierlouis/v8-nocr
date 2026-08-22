@@ -145,10 +145,20 @@ jobs:
         shell: cmd
         run: |
           cd v8\
-          git apply --3way --ignore-whitespace ..\win\x64\patches\${{ env.V8_VERSION }}\v8.patch
+          git apply -v --3way --ignore-whitespace ..\win\x64\patches\${{ env.V8_VERSION }}\v8.patch
           
           cd build\
-          git apply --3way --ignore-whitespace ..\..\win\x64\patches\${{ env.V8_VERSION }}\build\v8.patch
+          git apply -v --3way --ignore-whitespace ..\..\win\x64\patches\${{ env.V8_VERSION }}\build\v8.patch
+
+      - name: Verify Patch
+        shell: powershell
+        run: |
+          $filePath = "v8\build\rust\rust_bindgen_generator.gni"
+          if (Test-Path $filePath) {
+              Get-Content $filePath | Select-Object -Skip 149 -First 51 | ForEach-Object { "$($PSItem.ReadCount + 149): $_" }
+          } else {
+              Write-Error "File not found at $filePath"
+          }
 
       - name: Run GN
         shell: cmd
