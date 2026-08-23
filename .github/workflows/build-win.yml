@@ -145,11 +145,22 @@ jobs:
         shell: cmd
         run: |
           cd v8\ || exit /b 1
-          git apply -v --3way --ignore-whitespace ..\win\x64\patches\${{ env.V8_VERSION }}\v8.patch || exit /b 1
+          git apply -v --3way --ignore-whitespace ..\win\x64\patches\%V8_VERSION%\v8.patch
+          echo ROOT_PATCH_EXIT=%errorlevel%
+          
           cd build\ || exit /b 1
-          git apply -v --3way --ignore-whitespace ..\..\win\x64\patches\${{ env.V8_VERSION }}\build\v8.patch || exit /b 1
-          git diff --stat 2>&1
-          git diff -- rust/rust_bindgen_generator.gni 2>&1
+          echo BUILD_DIR=%cd%
+          if exist ..\..\win\x64\patches\%V8_VERSION%\build\v8.patch (echo PATCH_FILE_FOUND) else (echo PATCH_FILE_MISSING)
+          where git
+          git --version
+          type ..\..\win\x64\patches\%V8_VERSION%\build\v8.patch | git apply -v --3way --ignore-whitespace
+          echo BUILD_PATCH_EXIT=%errorlevel%
+
+      - name: Fix Patch V8
+        shell: powershell
+        run: |
+          $filePath = "v8\build\rust\rust_bindgen_generator.gni"
+          (Get-Content $filePath -Raw) -replace '(?m)^\s*"--libclang-path",\r?\n\s*rebase_path\(_libclang_path, root_build_dir\),\r?\n', '' | Set-Content $filePath -NoNewline
 
       - name: Verify Patch
         shell: powershell
@@ -157,7 +168,7 @@ jobs:
           $filePath = "v8\build\rust\rust_bindgen_generator.gni"
           if (Test-Path $filePath) {
               Select-String -Path $filePath -Pattern "libclang-path"
-              Get-Content $filePath | Select-Object -Skip 149 -First 51 | ForEach-Object { "$($PSItem.ReadCount + 149): $_" }
+              Get-Content $filePath | Select-Object -Skip 149 -First 51 | ForEach-Object { "$($PSItem.ReadCount): $_" }
           } else {
               Write-Error "File not found at $filePath"
           }
