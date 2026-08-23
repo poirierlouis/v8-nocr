@@ -142,36 +142,20 @@ jobs:
           call gclient sync -D
 
       - name: Patch V8
-        shell: cmd
+        shell: powershell
         run: |
-          cd v8\ || exit /b 1
-          git apply -v --3way --ignore-whitespace ..\win\x64\patches\%V8_VERSION%\v8.patch
-          echo ROOT_PATCH_EXIT=%errorlevel%
+          cd v8\ && git apply --3way --ignore-whitespace ..\win\x64\patches\${{ env.V8_VERSION }}\v8.patch
+          cd build\ && git apply --3way --ignore-whitespace ..\win\x64\patches\${{ env.V8_VERSION }}\build\v8.patch
           
-          cd build\ || exit /b 1
-          echo BUILD_DIR=%cd%
-          if exist ..\..\win\x64\patches\%V8_VERSION%\build\v8.patch (echo PATCH_FILE_FOUND) else (echo PATCH_FILE_MISSING)
-          where git
-          git --version
-          type ..\..\win\x64\patches\%V8_VERSION%\build\v8.patch | git apply -v --3way --ignore-whitespace
-          echo BUILD_PATCH_EXIT=%errorlevel%
-
-      - name: Fix Patch V8
-        shell: powershell
-        run: |
           $filePath = "v8\build\rust\rust_bindgen_generator.gni"
-          (Get-Content $filePath -Raw) -replace '(?m)^\s*"--libclang-path",\r?\n\s*rebase_path\(_libclang_path, root_build_dir\),\r?\n', '' | Set-Content $filePath -NoNewline
+          Select-String -Path $filePath -Pattern "libclang-path"
 
-      - name: Verify Patch
-        shell: powershell
-        run: |
-          $filePath = "v8\build\rust\rust_bindgen_generator.gni"
-          if (Test-Path $filePath) {
-              Select-String -Path $filePath -Pattern "libclang-path"
-              Get-Content $filePath | Select-Object -Skip 149 -First 51 | ForEach-Object { "$($PSItem.ReadCount): $_" }
-          } else {
-              Write-Error "File not found at $filePath"
-          }
+#      - name: Fix Patch V8
+#        shell: powershell
+#        run: |
+#          $filePath = "v8\build\rust\rust_bindgen_generator.gni"
+#          (Get-Content $filePath -Raw) -replace '(?m)^\s*"--libclang-path",\r?\n\s*rebase_path\(_libclang_path, root_build_dir\),\r?\n', '' | Set-Content $filePath -NoNewline
+#          Select-String -Path $filePath -Pattern "libclang-path"
 
       - name: Run GN
         shell: cmd
@@ -195,7 +179,7 @@ jobs:
           lib.exe /OUT:v8_monolith.lib `
                   .\out\release\obj\v8_monolith.lib `
                   .\out\release\obj\third_party\partition_alloc\src\partition_alloc\allocator_shim.lib `
-                  @rust_libs.rsp
+                  "@rust_libs.rsp"
 
       - name: Stage Artifact
         shell: cmd
