@@ -144,9 +144,10 @@ jobs:
       - name: Patch V8
         shell: powershell
         run: |
-          cd v8\ && git apply --3way --ignore-whitespace ..\win\x64\patches\${{ env.V8_VERSION }}\v8.patch
-          cd build\ && git apply --3way --ignore-whitespace ..\win\x64\patches\${{ env.V8_VERSION }}\build\v8.patch
-          
+          cd v8\
+          git apply --3way --ignore-whitespace ..\win\x64\patches\${{ env.V8_VERSION }}\v8.patch
+          cd build\
+          git apply --3way --ignore-whitespace ..\win\x64\patches\${{ env.V8_VERSION }}\build\v8.patch
           $filePath = "v8\build\rust\rust_bindgen_generator.gni"
           Select-String -Path $filePath -Pattern "libclang-path"
 
