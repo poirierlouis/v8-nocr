@@ -1,4 +1,4 @@
-diff --git a/config/win/BUILD.gn b/config/win/BUILD.gn
+﻿diff --git a/config/win/BUILD.gn b/config/win/BUILD.gn
 index 069432bba..49f3b91eb 100644
 --- a/config/win/BUILD.gn
 +++ b/config/win/BUILD.gn
