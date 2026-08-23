@@ -15,7 +15,7 @@ jobs:
 
     env:
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
-      V8_VERSION: 15.1.206.21
+      V8_VERSION: 15.2.124.8
 
     steps:
       - name: Checkout Repository
@@ -46,7 +46,7 @@ jobs:
                  examples\hello_world.cpp ^
                  /link ^
                  /LIBPATH:v8\lib\ v8_monolith.lib ^
-                 dbghelp.lib winmm.lib ^
+                 dbghelp.lib winmm.lib ws2_32.lib userenv.lib ntdll.lib ^
                  /Fe:hello_world.exe
           
           cl.exe /std:c++20 /Zc:__cplusplus /EHsc /O2 ^
@@ -55,7 +55,7 @@ jobs:
                  examples\intl.cpp ^
                  /link ^
                  /LIBPATH:v8\lib\ v8_monolith.lib ^
-                 dbghelp.lib winmm.lib ^
+                 dbghelp.lib winmm.lib ws2_32.lib userenv.lib ntdll.lib ^
                  /Fe:intl.exe
           
           cl.exe /std:c++20 /Zc:__cplusplus /EHsc /O2 ^
@@ -64,8 +64,17 @@ jobs:
                  examples\wasm.cpp ^
                  /link ^
                  /LIBPATH:v8\lib\ v8_monolith.lib ^
-                 dbghelp.lib winmm.lib ^
+                 dbghelp.lib winmm.lib ws2_32.lib userenv.lib ntdll.lib ^
                  /Fe:wasm.exe
+          
+          cl.exe /std:c++20 /Zc:__cplusplus /EHsc /O2 ^
+                 /DV8_COMPRESS_POINTERS /DV8_ENABLE_WEBASSEMBLY ^
+                 /Iv8\include ^
+                 examples\temporal.cpp ^
+                 /link ^
+                 /LIBPATH:v8\lib\ v8_monolith.lib ^
+                 dbghelp.lib winmm.lib ws2_32.lib userenv.lib ntdll.lib ^
+                 /Fe:temporal.exe
 
       - name: Check examples
         shell: cmd
@@ -80,4 +89,8 @@ jobs:
           
           wasm.exe > output.txt || (echo Program crashed with exit code %errorlevel% && exit /b 1)
           (echo 3 + 4 = 7) > test.txt
+          fc.exe test.txt output.txt
+          
+          temporal.exe > output.txt || (echo Program crashed with exit code %errorlevel% && exit /b 1)
+          (echo 1879-03-14T18:04:35) > test.txt
           fc.exe test.txt output.txt
