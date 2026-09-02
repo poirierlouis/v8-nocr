@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      V8_VERSION: 15.2.124.13
+      V8_VERSION: 15.2.124.19
       LLVM_VERSION: 23
 
     steps:
