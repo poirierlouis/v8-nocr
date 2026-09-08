@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      V8_VERSION: 15.2.124.19
+      V8_VERSION: 15.2.124.21
       LLVM_VERSION: 23
 
     steps:
@@ -79,12 +79,29 @@ jobs:
           cd v8
           ninja -C out/release v8_monolith
 
+      - name: Merge with Rust libraries
+        run: |
+          find "$(pwd)/v8/out/release/obj" -name "*.rlib" -type f | sed 's/^/"/; s/$/"/' | tr '\n' ' ' > rust_rlibs.rsp
+          find "$(pwd)/v8/third_party/rust-toolchain/lib/rustlib/x86_64-unknown-linux-gnu/lib" -name "*.rlib" -type f | sed 's/^/"/; s/$/"/' | tr '\n' ' ' >> rust_rlibs.rsp
+          (
+            echo "create libv8_monolith.a"
+            echo "addlib v8/out/release/obj/libv8_monolith.a"
+            echo "addlib v8/out/release/obj/third_party/partition_alloc/src/partition_alloc/liballocator_shim.a"
+          
+            tr ' ' '\n' < rust_rlibs.rsp | sed 's/"//g' | grep '\.rlib$' | sed 's/^/addlib /'
+          
+            echo "save"
+            echo "end"
+          ) | ar -M
+          
+          ranlib libv8_monolith.a
+
       - name: Stage Artifact
         run: |
           mkdir -p dist/lib
           mkdir -p dist/include
           
-          cp v8/out/release/obj/libv8_monolith.a dist/lib/
+          mv libv8_monolith.a dist/lib/
           rsync -avm --include='*/' --include='*.h' --exclude='*' v8/include/ dist/include/
           cp v8/LICENSE* dist/
 

@@ -14,7 +14,7 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
 
     env:
-      V8_VERSION: 15.2.124.19
+      V8_VERSION: 15.2.124.21
 
     steps:
       - name: Checkout Repository
@@ -47,7 +47,7 @@ jobs:
                                        -I./v8/include \
                                        examples/hello_world.cpp \
                                        -L./v8/lib -lv8_monolith \
-                                       -lrt -ldl -pthread -latomic \
+                                       -lrt -ldl -pthread -latomic -lm -lgcc_s \
                                        -o hello_world
           
           /usr/lib/llvm-23/bin/clang++ -std=c++20 \
@@ -58,7 +58,7 @@ jobs:
                                        -I./v8/include \
                                        examples/intl.cpp \
                                        -L./v8/lib -lv8_monolith \
-                                       -lrt -ldl -pthread -latomic \
+                                       -lrt -ldl -pthread -latomic -lm -lgcc_s \
                                        -o intl
           
           /usr/lib/llvm-23/bin/clang++ -std=c++20 \
@@ -69,8 +69,19 @@ jobs:
                                        -I./v8/include \
                                        examples/wasm.cpp \
                                        -L./v8/lib -lv8_monolith \
-                                       -lrt -ldl -pthread -latomic \
+                                       -lrt -ldl -pthread -latomic -lm -lgcc_s \
                                        -o wasm
+          
+          /usr/lib/llvm-23/bin/clang++ -std=c++20 \
+                                       -fuse-ld=lld \
+                                       -O3 \
+                                       -DV8_COMPRESS_POINTERS \
+                                       -DV8_ENABLE_WEBASSEMBLY \
+                                       -I./v8/include \
+                                       examples/temporal.cpp \
+                                       -L./v8/lib -lv8_monolith \
+                                       -lrt -ldl -pthread -latomic -lm -lgcc_s \
+                                       -o temporal
 
       - name: Check examples
         run: |
@@ -84,4 +95,8 @@ jobs:
           
           ./wasm > output.txt || (echo Program crashed with exit code $? && exit 1)
           echo "3 + 4 = 7" > test.txt
+          diff test.txt output.txt
+          
+          ./temporal > output.txt || (echo Program crashed with exit code $? && exit 1)
+          echo "1879-03-14T18:04:35" > test.txt
           diff test.txt output.txt
