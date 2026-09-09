@@ -11,7 +11,7 @@ jobs:
     env:
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
       V8_VERSION: 15.2.124.21
-      LLVM_VERSION: 22.1.8
+      LLVM_VERSION: 23.1.1
       WINSDK_VERSION: 10.0.28000.0
 
     steps:
@@ -96,6 +96,19 @@ jobs:
         run: |
           echo "C:\llvm-clang\${{ env.LLVM_VERSION }}\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
+      - name: Install Rust
+        shell: powershell
+        run: |
+          Invoke-WebRequest -Uri "https://win.rustup.rs/x86_64" -OutFile "rustup-init.exe"
+          .\rustup-init.exe -y --default-toolchain nightly-2026-08-18
+          Add-Content -Path $env:GITHUB_PATH -Value "D:\.cargo\bin"
+          cargo install bindgen-cli
+
+      - name: Install bindgen
+        shell: cmd
+        run: |
+          cargo install bindgen-cli
+
       - name: Install depot_tools
         shell: cmd
         run: |
@@ -122,10 +135,10 @@ jobs:
         shell: cmd
         run: |
           cd v8\
-          git apply --3way --ignore-whitespace ..\win\x64\patches\${{ env.V8_VERSION }}\v8.patch
+          git apply --ignore-whitespace ..\win\x64\patches\${{ env.V8_VERSION }}\v8.patch
           
           cd build
-          git apply --3way --ignore-whitespace ..\..\win\x64\patches\${{ env.V8_VERSION }}\build\v8.patch
+          git apply --ignore-whitespace ..\..\win\x64\patches\${{ env.V8_VERSION }}\build\v8.patch
 
       - name: Run GN
         shell: cmd

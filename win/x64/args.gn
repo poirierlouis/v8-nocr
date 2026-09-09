@@ -29,5 +29,9 @@ v8_enable_pointer_compression=true
 v8_enable_sandbox=false
 v8_enable_temporal_support=true
 
-clang_base_path="C:\llvm-clang\22.1.8"
-clang_version="22"
+clang_base_path="C:\llvm-clang\23.1.1"
+clang_version="23"
+
+rust_sysroot_absolute="D:/.rustup/toolchains/nightly-2026-08-18-x86_64-pc-windows-msvc"
+rust_bindgen_root="D:/.cargo"
+rustc_version="1.100.0-nightly"
