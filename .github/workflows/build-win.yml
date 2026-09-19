@@ -10,8 +10,8 @@ jobs:
 
     env:
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
-      V8_VERSION: 15.2.124.19
-      LLVM_VERSION: 22.1.8
+      V8_VERSION: 15.2.124.33
+      LLVM_VERSION: 23.1.1
       WINSDK_VERSION: 10.0.28000.0
 
     steps:
