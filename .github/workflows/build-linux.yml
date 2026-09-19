@@ -9,8 +9,9 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      V8_VERSION: 15.2.124.33
+      V8_VERSION: 15.3.76.16
       LLVM_VERSION: 23
+      CARGO_HOME: /home/runner/.cargo
 
     steps:
       - name: Checkout Repository
@@ -45,6 +46,16 @@ jobs:
 
           echo "/usr/lib/llvm-${{ env.LLVM_VERSION }}" >> $GITHUB_PATH
 
+      - name: Install Rust
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+          rustup default nightly
+          rustup component add rust-src rustfmt clippy
+
+      - name: Install bindgen
+        run: |
+          cargo install bindgen-cli
+
       - name: Install depot_tools
         run: |
           git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
@@ -65,7 +76,7 @@ jobs:
       - name: Patch V8
         run: |
           cd v8
-          git apply --3way --ignore-whitespace ../linux/x64/patches/${{ env.V8_VERSION }}/v8.patch
+          git apply --ignore-whitespace ../linux/x64/patches/${{ env.V8_VERSION }}/v8.patch
 
       - name: Run GN
         run: |
@@ -79,12 +90,30 @@ jobs:
           cd v8
           ninja -C out/release v8_monolith
 
+      - name: Merge with Rust libraries
+        run: |
+          cd v8/
+          find "$(pwd)/out/release/obj" -name "*.rlib" -type f | sed 's/^/"/; s/$/"/' | tr '\n' ' ' > rust_rlibs.rsp
+          find "$(rustc --print sysroot)/lib/rustlib/x86_64-unknown-linux-gnu/lib" -name "*.rlib" -type f | sed 's/^/"/; s/$/"/' | tr '\n' ' ' >> rust_rlibs.rsp
+          (
+            echo "create libv8_monolith.a"
+            echo "addlib out/release/obj/libv8_monolith.a"
+            echo "addlib out/release/obj/third_party/partition_alloc/src/partition_alloc/liballocator_shim.a"
+          
+            tr ' ' '\n' < rust_rlibs.rsp | sed 's/"//g' | grep '\.rlib$' | sed 's/^/addlib /'
+          
+            echo "save"
+            echo "end"
+          ) | ar -M
+          
+          ranlib libv8_monolith.a
+
       - name: Stage Artifact
         run: |
           mkdir -p dist/lib
           mkdir -p dist/include
           
-          cp v8/out/release/obj/libv8_monolith.a dist/lib/
+          cp v8/libv8_monolith.a dist/lib/
           rsync -avm --include='*/' --include='*.h' --exclude='*' v8/include/ dist/include/
           cp v8/LICENSE* dist/
 
