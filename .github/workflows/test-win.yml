@@ -15,7 +15,7 @@ jobs:
 
     env:
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
-      V8_VERSION: 15.2.124.33
+      V8_VERSION: 15.3.76.16
 
     steps:
       - name: Checkout Repository
@@ -46,7 +46,7 @@ jobs:
                  examples\hello_world.cpp ^
                  /link ^
                  /LIBPATH:v8\lib\ v8_monolith.lib ^
-                 dbghelp.lib winmm.lib ^
+                 dbghelp.lib winmm.lib ws2_32.lib userenv.lib ntdll.lib synchronization.lib ^
                  /Fe:hello_world.exe
           
           cl.exe /std:c++20 /Zc:__cplusplus /EHsc /O2 ^
@@ -55,7 +55,7 @@ jobs:
                  examples\intl.cpp ^
                  /link ^
                  /LIBPATH:v8\lib\ v8_monolith.lib ^
-                 dbghelp.lib winmm.lib ^
+                 dbghelp.lib winmm.lib ws2_32.lib userenv.lib ntdll.lib synchronization.lib ^
                  /Fe:intl.exe
           
           cl.exe /std:c++20 /Zc:__cplusplus /EHsc /O2 ^
@@ -64,8 +64,17 @@ jobs:
                  examples\wasm.cpp ^
                  /link ^
                  /LIBPATH:v8\lib\ v8_monolith.lib ^
-                 dbghelp.lib winmm.lib ^
+                 dbghelp.lib winmm.lib ws2_32.lib userenv.lib ntdll.lib synchronization.lib ^
                  /Fe:wasm.exe
+          
+          cl.exe /std:c++20 /Zc:__cplusplus /EHsc /O2 ^
+                 /DV8_COMPRESS_POINTERS /DV8_ENABLE_WEBASSEMBLY ^
+                 /Iv8\include ^
+                 examples\temporal.cpp ^
+                 /link ^
+                 /LIBPATH:v8\lib\ v8_monolith.lib ^
+                 dbghelp.lib winmm.lib ws2_32.lib userenv.lib ntdll.lib synchronization.lib ^
+                 /Fe:temporal.exe
 
       - name: Check examples
         shell: cmd
