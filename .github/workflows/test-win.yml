@@ -90,3 +90,7 @@ jobs:
           wasm.exe > output.txt || (echo Program crashed with exit code %errorlevel% && exit /b 1)
           (echo 3 + 4 = 7) > test.txt
           fc.exe test.txt output.txt
+          
+          temporal.exe > output.txt || (echo Program crashed with exit code %errorlevel% && exit /b 1)
+          (echo 1879-03-14T18:04:35) > test.txt
+          fc.exe test.txt output.txt
