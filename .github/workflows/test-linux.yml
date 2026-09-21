@@ -14,7 +14,7 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
 
     env:
-      V8_VERSION: 15.3.76.16
+      V8_VERSION: 15.4.80.11
 
     steps:
       - name: Checkout Repository
@@ -42,6 +42,7 @@ jobs:
           /usr/lib/llvm-23/bin/clang++ -std=c++20 \
                                        -fuse-ld=lld \
                                        -O3 \
+                                       -DV8_CPPGC_MICROTASK_QUEUE \
                                        -DV8_COMPRESS_POINTERS \
                                        -DV8_ENABLE_WEBASSEMBLY \
                                        -I./v8/include \
@@ -53,6 +54,7 @@ jobs:
           /usr/lib/llvm-23/bin/clang++ -std=c++20 \
                                        -fuse-ld=lld \
                                        -O3 \
+                                       -DV8_CPPGC_MICROTASK_QUEUE \
                                        -DV8_COMPRESS_POINTERS \
                                        -DV8_ENABLE_WEBASSEMBLY \
                                        -I./v8/include \
@@ -64,6 +66,7 @@ jobs:
           /usr/lib/llvm-23/bin/clang++ -std=c++20 \
                                        -fuse-ld=lld \
                                        -O3 \
+                                       -DV8_CPPGC_MICROTASK_QUEUE \
                                        -DV8_COMPRESS_POINTERS \
                                        -DV8_ENABLE_WEBASSEMBLY \
                                        -I./v8/include \
@@ -75,6 +78,7 @@ jobs:
           /usr/lib/llvm-23/bin/clang++ -std=c++20 \
                                        -fuse-ld=lld \
                                        -O3 \
+                                       -DV8_CPPGC_MICROTASK_QUEUE \
                                        -DV8_COMPRESS_POINTERS \
                                        -DV8_ENABLE_WEBASSEMBLY \
                                        -I./v8/include \

@@ -10,7 +10,7 @@ jobs:
 
     env:
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
-      V8_VERSION: 15.3.76.16
+      V8_VERSION: 15.4.80.11
       LLVM_VERSION: 23.1.1
       WINSDK_VERSION: 10.0.28000.0
       RUSTUP_HOME: D:\a\.rustup
