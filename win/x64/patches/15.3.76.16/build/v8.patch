@@ -1,0 +1,31 @@
+diff --git a/config/win/BUILD.gn b/config/win/BUILD.gn
+index e64ec9e21..9fee5ccfd 100644
+--- a/config/win/BUILD.gn
++++ b/config/win/BUILD.gn
+@@ -239,6 +239,13 @@ config("runtime_library") {
+   cflags = []
+   cflags_cc = []
+ 
++  cflags += [
++    "-Wno-unknown-argument", "-Wno-unknown-warning-option",
++    "-D_SILENCE_ALL_CXX20_DEPRECATION_WARNINGS"
++  ]
++
++  ldflags = [ "/LIBPATH:" + getenv("VCINSTALLDIR") + "\\Tools\\MSVC\\" + getenv("VCToolsVersion") + "\\lib\\x64" ]
++
+   # Defines that set up the CRT.
+   defines = [
+     "__STD_C",
+diff --git a/toolchain/win/tool_wrapper.py b/toolchain/win/tool_wrapper.py
+index d92dca76f..a225aae27 100644
+--- a/toolchain/win/tool_wrapper.py
++++ b/toolchain/win/tool_wrapper.py
+@@ -150,7 +150,7 @@ class WinTool(object):
+         # Read output one line at a time as it shows up to avoid OOM failures when
+         # GBs of output is produced.
+         for line in link.stdout:
+-            line = line.decode('utf8')
++            line = line.decode('cp1252')
+             if (
+                 not line.startswith('   Creating library ')
+                 and not line.startswith('Generating code')
