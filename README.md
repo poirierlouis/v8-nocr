@@ -68,11 +68,11 @@ them on your system.
 
 | Version     |                                 Windows                                  |                                  Linux                                   |
 |-------------|:------------------------------------------------------------------------:|:------------------------------------------------------------------------:|
+| 15.5.35.22  | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.5.35.22)  | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.5.35.22)  |
 | 15.4.80.24  | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.4.80.24)  | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.4.80.24)  |
 | 15.3.76.16  | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.3.76.16)  | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.3.76.16)  |
 | 15.2.124.33 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.2.124.33) | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.2.124.33) |
 | 15.1.206.21 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.1.206.21) | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.1.206.21) |
-| 15.0.245.23 | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.0.245.23) | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.0.245.23) |
 
 <!-- Links -->
 [LZMA]: https://wikipedia.org/wiki/LZMA
@@ -82,11 +82,11 @@ them on your system.
 
 | Version     | Intl[^1] | WebAssembly[^2] | Pointer Compression[^3] | Sandbox[^4] | Temporal[^5] |
 |-------------|:--------:|:---------------:|:-----------------------:|:-----------:|:------------:|
+| 15.5.35.22  |    ✅    |       ✅        |           ✅            |     ❌      |      ✅      |
 | 15.4.80.24  |    ✅    |       ✅        |           ✅            |     ❌      |      ✅      |
 | 15.3.76.16  |    ✅    |       ✅        |           ✅            |     ❌      |      ✅      |
 | 15.2.124.33 |    ✅    |       ✅        |           ✅            |     ❌      |      ❌      |
 | 15.1.206.21 |    ✅    |       ✅        |           ✅            |     ❌      |      ❌      |
-| 15.0.245.23 |    ✅    |       ✅        |           ✅            |     ❌      |      ❌      |
 
 [^1]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl
 [^2]: https://developer.mozilla.org/en-US/docs/WebAssembly
