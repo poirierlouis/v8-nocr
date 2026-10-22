@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      V8_VERSION: 15.5.35.25
+      V8_VERSION: 15.6.75.22
       LLVM_VERSION: 23
       CARGO_HOME: /home/runner/.cargo
 
@@ -77,6 +77,9 @@ jobs:
         run: |
           cd v8
           git apply --ignore-whitespace ../linux/x64/patches/${{ env.V8_VERSION }}/v8.patch
+          
+          cd third_party/partition_alloc
+          git apply --ignore-whitespace ../../../linux/x64/patches/${{ env.V8_VERSION }}/third_party/partition_alloc/v8.patch
 
       - name: Run GN
         run: |

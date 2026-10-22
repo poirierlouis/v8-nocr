@@ -1,0 +1,12 @@
+diff --git a/src/partition_alloc/internal_allocator_forward.h b/src/partition_alloc/internal_allocator_forward.h
+index 266ce80a..c5058e4f 100644
+--- a/src/partition_alloc/internal_allocator_forward.h
++++ b/src/partition_alloc/internal_allocator_forward.h
+@@ -5,6 +5,7 @@
+ #ifndef PARTITION_ALLOC_INTERNAL_ALLOCATOR_FORWARD_H_
+ #define PARTITION_ALLOC_INTERNAL_ALLOCATOR_FORWARD_H_
+ 
++#include <cstddef>
+ #include <new>
+ #include <type_traits>
+ 
