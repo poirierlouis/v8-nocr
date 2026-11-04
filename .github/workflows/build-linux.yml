@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      V8_VERSION: 15.6.75.32
+      V8_VERSION: 15.6.75.39
       LLVM_VERSION: 23
       CARGO_HOME: /home/runner/.cargo
 
