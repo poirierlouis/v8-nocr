@@ -1,5 +1,10 @@
 # V8 – no Chromium
 
+[![Release: latest by date](https://img.shields.io/github/v/release/poirierlouis/v8-nocr)](https://github.com/poirierlouis/v8-nocr/releases/latest)
+![Platform: windows, linux](https://img.shields.io/badge/platform-windows%20%7C%20linux-green)
+![Arch: x64](https://img.shields.io/badge/arch-x64-green)
+![Downloads](https://img.shields.io/github/downloads/poirierlouis/v8-nocr/total?color=orange)
+
 This repository is meant to build Google's [V8] JavaScript engine as a static
 library (monolith). Its purpose is to provide a common place to maintain
 a non-Chromium-based build pipeline of V8.
@@ -68,7 +73,7 @@ them on your system.
 
 | Version     |                                 Windows                                  |                                  Linux                                   |
 |-------------|:------------------------------------------------------------------------:|:------------------------------------------------------------------------:|
-| 15.6.75.32  | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.6.75.32)  | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.6.75.32)  |
+| 15.6.75.39  | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.6.75.39)  | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.6.75.39)  |
 | 15.5.35.25  | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.5.35.25)  | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.5.35.25)  |
 | 15.4.80.24  | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.4.80.24)  | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.4.80.24)  |
 | 15.3.76.16  | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.3.76.16)  | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.3.76.16)  |
@@ -82,7 +87,7 @@ them on your system.
 
 | Version     | Intl[^1] | WebAssembly[^2] | Pointer Compression[^3] | Sandbox[^4] | Temporal[^5] |
 |-------------|:--------:|:---------------:|:-----------------------:|:-----------:|:------------:|
-| 15.6.75.32  |    ✅    |       ✅        |           ✅            |     ❌      |      ✅      |
+| 15.6.75.39  |    ✅    |       ✅        |           ✅            |     ❌      |      ✅      |
 | 15.5.35.25  |    ✅    |       ✅        |           ✅            |     ❌      |      ✅      |
 | 15.4.80.24  |    ✅    |       ✅        |           ✅            |     ❌      |      ✅      |
 | 15.3.76.16  |    ✅    |       ✅        |           ✅            |     ❌      |      ✅      |
