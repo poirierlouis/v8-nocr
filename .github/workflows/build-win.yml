@@ -10,12 +10,12 @@ jobs:
 
     env:
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
-      V8_VERSION: 15.7.112.52
-      LLVM_VERSION: 23.1.5
+      V8_VERSION: 15.8.62.54
+      LLVM_VERSION: 23.1.6
       WINSDK_VERSION: 10.0.28000.0
       RUSTUP_HOME: D:\a\.rustup
       CARGO_HOME: D:\a\.cargo
-      LIBCLANG_PATH: C:\llvm-clang\23.1.5\bin
+      LIBCLANG_PATH: C:\llvm-clang\23.1.6\bin
 
     steps:
       - name: Checkout Repository
