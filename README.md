@@ -73,7 +73,7 @@ them on your system.
 
 | Version     |                                 Windows                                  |                                  Linux                                   |
 |-------------|:------------------------------------------------------------------------:|:------------------------------------------------------------------------:|
-| 15.7.112.38  | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.7.112.38)  | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.7.112.38)  |
+| 15.7.112.52  | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.7.112.52)  | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.7.112.52)  |
 | 15.6.75.39  | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.6.75.39)  | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.6.75.39)  |
 | 15.5.35.25  | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.5.35.25)  | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.5.35.25)  |
 | 15.4.80.24  | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.4.80.24)  | [x64](https://github.com/poirierlouis/v8-nocr/releases/tag/v15.4.80.24)  |
@@ -87,7 +87,7 @@ them on your system.
 
 | Version     | Intl[^1] | WebAssembly[^2] | Pointer Compression[^3] | Sandbox[^4] | Temporal[^5] |
 |-------------|:--------:|:---------------:|:-----------------------:|:-----------:|:------------:|
-| 15.7.112.38  |    ✅    |       ✅        |           ✅            |     ❌      |      ✅      |
+| 15.7.112.52  |    ✅    |       ✅        |           ✅            |     ❌      |      ✅      |
 | 15.6.75.39  |    ✅    |       ✅        |           ✅            |     ❌      |      ✅      |
 | 15.5.35.25  |    ✅    |       ✅        |           ✅            |     ❌      |      ✅      |
 | 15.4.80.24  |    ✅    |       ✅        |           ✅            |     ❌      |      ✅      |
